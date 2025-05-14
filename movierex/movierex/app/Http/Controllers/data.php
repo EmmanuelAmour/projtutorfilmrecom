@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class Data extends Controller
+{
+    protected $movies = [];
+
+    // Set movies array
+    public function setMovies(array $movies)
+    {
+        $this->movies = $movies;
+    }
+
+    // Get movies array
+    public function getMovies()
+    {
+        return $this->movies;
+    }
+
+    // Sort movies by a given key and order
+    public function sortMoviesBy($key, $order = 'asc')
+    {
+        if (empty($this->movies)) {
+            return false; // or throw an exception if preferred
+        }
+
+        usort($this->movies, function ($a, $b) use ($key, $order) {
+            if (!isset($a[$key]) || !isset($b[$key])) {
+                return 0;
+            }
+
+            return ($order === 'asc')
+                ? $a[$key] <=> $b[$key]
+                : $b[$key] <=> $a[$key];
+        });
+
+        return true; // success
+    }
+}
