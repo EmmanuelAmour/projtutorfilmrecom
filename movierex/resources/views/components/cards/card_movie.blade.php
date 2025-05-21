@@ -1,6 +1,6 @@
 <a href="/movie/{{ $movie['id'] }}">
     <div class="movie-card bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden"
-        style="animation-delay: {{ 1 * 0.35 }}s">
+        style="animation-delay: {{ $index * 0.05 }}s">
         <div class="relative aspect-[2/3]">
             <img src="https://image.tmdb.org/t/p/w300_and_h450_bestv2/{{ $movie['poster_path'] }}"
                 alt="{{ $movie['title'] }}"

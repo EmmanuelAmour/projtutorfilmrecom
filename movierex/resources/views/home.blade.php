@@ -1,14 +1,11 @@
 @extends('layouts.default')
-
+@section('title', 'Home Page')
 @section('content')
     <div class="container">
         <h1>Welcome to MovieRex</h1>
         <p>Your one-stop destination for all things movies!</p>
 
     </div>
-
-
-
     <section>
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold">Popluar</h2>
@@ -18,30 +15,15 @@
             </div>
         </div>
         <div class="movie-carousel flex overflow-x-auto pb-4 space-x-4 scroll-smooth">
-
             <!-- Utilisation de la classe "movie-card" pour chaque film -->
-            @foreach ($popular_movies as $movie)
-                <x-cards.card_movie :movie="$movie" />
+            @foreach ($popular_movies as $index => $movie)
+                <x-cards.card_movie :movie="$movie" :index="$index" />
             @endforeach
-
-
-
-
-
-
-
-
-
-
-
         </div>
     </section>
 
     <!-- Sections par catégorie -->
     <div class="grid gap-8 md:grid-cols-2">
-
-
-
         <section>
             <h2 class="text-xl font-bold mb-4 border-l-4 border-amber-400 pl-3">Western</h2>
             <div class="grid grid-cols-2 gap-4">

@@ -173,14 +173,11 @@ class MovieSearchController extends Controller
 
         if ($personResponse->successful()) {
             $actorData = $personResponse->json()['results'][0] ?? null;
-
             if ($actorData) {
                 $actorId = $actorData['id'];
-
                 $movieCredits = Http::get("https://api.themoviedb.org/3/person/{$actorId}/movie_credits", [
                     'api_key' => $this->apiKey
                 ]);
-
                 if ($movieCredits->successful()) {
                     $movies = $movieCredits->json()['cast'];
                     return view('movies', [
@@ -193,6 +190,7 @@ class MovieSearchController extends Controller
 
         return abort(404);
     }
+    
 
     // For Director, Producer, Writer, Composer, Cinematographer, Editor:
     // (Similar to Actor but you filter by job)

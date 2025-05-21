@@ -6,11 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ asset('img/logo_no_bg.png') }}" type="image/png">
 
-    <title> MovieRex</title>
+    <title> MovieRex </title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
         integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM8d7xj1z5l5e5e5e5e5e5e5e5e5e5e5e5e5" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/cards.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
         .movie-carousel::-webkit-scrollbar {
             height: 8px;
@@ -33,13 +35,9 @@
     <!-- Logo vectoriel SVG -->
     <x-header />
     <main class="container mx-auto px-4 py-8 space-y-12">
-
         @yield('content')
-
-
         <!-- Sections par catégorie -->
     </main>
-    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         // Carrousel horizontal
         const carousel = document.querySelector('.movie-carousel');

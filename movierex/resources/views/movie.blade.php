@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $movie['title'] }}</title>
     <link rel="icon" href="{{ asset('img/logo.png') }}" type="image/png">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes fadeIn {

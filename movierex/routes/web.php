@@ -10,7 +10,6 @@ Route::get('/', [HomeController::class, 'index'])->name('index');
 //Route::get('/home', [HomeController::class, 'index'])->name('home');
 //|--------------------------------------------------------------------------
 //| Web Routes to get movies and search for movies
-
 Route::get('/movie/{id}', [MovieController::class, 'show_movie_single']);
 Route::get('/recommendation/{movie_id}', [MovieController::class, 'recommendations']);
 Route::get('/popular', [MovieController::class, 'popular']);
@@ -35,14 +34,8 @@ Route::get('/search/country/{country}', [MovieSearchController::class, 'searchBy
 //Route::get('/search/{query}', [MovieSearchController::class, 'search']);
 
 //|--------------------------------------------------------------------------
-// to get the similar keywords for an input keyword
-Route::get('/search/keywords/{keyword}', [MovieSearchController::class, 'searchByKeyword'])->name('get.keywords');
-//|--------------------------------------------------------------------------
 
-
-
-
-Route::get('/search/actor', [MovieSearchController::class, 'searchByActor'])->name('search.actor');
+//Route::get('/search/actor', [MovieSearchController::class, 'searchByActor'])->name('search.actor');
 Route::get('/search/director', [MovieSearchController::class, 'searchByDirector']);
 Route::get('/search/producer', [MovieSearchController::class, 'searchByProducer']);
 Route::get('/search/writer', [MovieSearchController::class, 'searchByWriter']);
@@ -64,3 +57,4 @@ Route::get('/movies/horror', [UserController::class, 'getHorrorMovies']);
 Route::get('/movies/western', [UserController::class, 'getWesternMovies']);
 Route::get('/movies/popular', [UserController::class, 'getPopularMovies']);
 
+include __DIR__ . '/search.php';

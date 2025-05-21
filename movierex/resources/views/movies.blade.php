@@ -6,24 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $pageTitle }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .movie-card {
-            animation: fadeIn 0.5s ease-out forwards;
-            opacity: 0;
-        }
-    </style>
 </head>
 
 <body class="bg-gray-50">
