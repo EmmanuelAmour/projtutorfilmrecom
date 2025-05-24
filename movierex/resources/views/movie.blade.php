@@ -137,9 +137,9 @@
                                     <path d="M12.5 7h-1v6h1V7zm0 7h-1v1h1v-1z" />
                                 </svg>
                                 <span class="text-sm font-medium">
-                                    @if ($movie['adult'])
+                                    @if (isset($movie['adult']) && $movie['adult'] === true)
                                         18+ (Explicit Content)
-                                    @elseif (!empty($certification))
+                                    @elseif (isset($certification) && !empty($certification))
                                         Rated: {{ $certification }}
                                     @else
                                         Unrated / Not Specified

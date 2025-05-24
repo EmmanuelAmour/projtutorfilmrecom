@@ -11,22 +11,27 @@ class MovieSearchController extends Controller
 {
     protected $data;
     protected $apiKey;
+    protected $responseController;
+
 
 
     public function __construct()
     {
         $this->data = new data();
         $this->apiKey = env('TMDB_API_KEY');
+        $this->responseController = new responseController(false);
     }
 
     public function search($query)
     {
-        $response = Http::get("https://api.themoviedb.org/3/search/movie?api_key={$this->apiKey}&query={$query}");
-
+        $response =$this->responseController->make_request(
+            ['link' => 'https://api.themoviedb.org/3/search/movie'], [
+            'query' => $query,
+        ]);
         if ($response->successful()) {
-            $movies = $response->json()['results'];
+            $this->data->prepareMovies($response->json()['results'] ?? []);   
             return view('movies', [
-                'movies' => $movies,
+                'movies' => $this->data->getMovies(),
                 'pageTitle' => 'Search Results for "' . $query . '"'
             ]);
         }
@@ -44,10 +49,10 @@ class MovieSearchController extends Controller
             ]
         );
         if ($response->successful()) {
-            $movies = $response->json()['results'];
-            dd($movies);
+            $this->data->prepareMovies($response->json()['results'] ?? []);   
+            //dd($movies);
             return view('movies', [
-                'movies' => $movies, // No movies directly here!
+                'movies' => $this->data->getMovies(), // No movies directly here!
                 'pageTitle' => 'Keywords Found for "' . $keyword . '"'
             ]);
         }
@@ -56,7 +61,6 @@ class MovieSearchController extends Controller
 
     public function searchByGenre($genre)
     {
-
         $genreResponse = Http::get("https://api.themoviedb.org/3/genre/movie/list", [
             'api_key' => $this->apiKey
         ]);
@@ -73,9 +77,9 @@ class MovieSearchController extends Controller
                 ]);
 
                 if ($response->successful()) {
-                    $movies = $response->json()['results'];
+                    $this->data->prepareMovies($response->json()['results'] ?? []);   
                     return view('movies', [
-                        'movies' => $movies,
+                        'movies' => $this->data->getMovies(),
                         'pageTitle' => 'Movies in Genre: ' . ucfirst($genre)
                     ]);
                 }
@@ -95,8 +99,7 @@ class MovieSearchController extends Controller
             'primary_release_year' => $year
         ]);
         if ($response->successful()) {
-            $this->data->setMovies($response->json()['results'] ?? []);
-            $this->data->sortMoviesBy('vote_average', 'desc');
+            $this->data->prepareMovies($response->json()['results'] ?? []);
             return view('movies', [
                 'movies' => $this->data->getMovies(),
                 'pageTitle' => 'Movies Released in ' . $year . ' (Sorted by Rating) || total_results  ' . $response->json()['total_results'] . ' movies'
@@ -116,8 +119,7 @@ class MovieSearchController extends Controller
         ]);
 
         if ($response->successful()) {
-            $this->data->setMovies($response->json()['results'] ?? []);
-            $this->data->sortMoviesBy('vote_average', 'desc');
+            $this->data->prepareMovies($response->json()['results'] ?? []);
             return view('movies', [
                 'movies' => $this->data->getMovies(),
                 'pageTitle' => 'Movies Rated Above ' . $rating . '★'
@@ -135,9 +137,9 @@ class MovieSearchController extends Controller
         ]);
 
         if ($response->successful()) {
-            $movies = $response->json()['results'];
+            $this->data->prepareMovies($response->json()['results'] ?? []);
             return view('movies', [
-                'movies' => $movies,
+                'movies' => $this->data->getMovies(),
                 'pageTitle' => 'Movies in Language: ' . strtoupper($language)
             ]);
         }
@@ -153,9 +155,9 @@ class MovieSearchController extends Controller
         ]);
 
         if ($response->successful()) {
-            $movies = $response->json()['results'];
+            $this->data->prepareMovies(movies: $response->json()['results'] ?? []);
             return view('movies', [
-                'movies' => $movies,
+                'movies' => $this->data->getMovies(),
                 'pageTitle' => 'Movies Released in ' . strtoupper($country)
             ]);
         }
@@ -277,13 +279,30 @@ class MovieSearchController extends Controller
                 ]);
 
                 if ($moviesResponse->successful()) {
-                    $movies = $moviesResponse->json()['results'];
+                    $this->data->prepareMovies(movies: $moviesResponse->json()['results'] ?? []);
                     return view('movies', [
-                        'movies' => $movies,
+                        'movies' => $this->data->getMovies(),
                         'pageTitle' => 'Movies by ' . $company
                     ]);
                 }
             }
+        }
+
+        return abort(404);
+    }
+
+    public function getMovieCast($movieId)
+    {
+        $response = Http::get("https://api.themoviedb.org/3/movie/{$movieId}/credits", [
+            'api_key' => $this->apiKey
+        ]);
+
+        if ($response->successful()) {
+            $cast = $response->json()['cast'] ?? [];
+            return view('cast', [
+                'cast' => $cast,
+                'pageTitle' => 'Movie Cast'
+            ]);
         }
 
         return abort(404);

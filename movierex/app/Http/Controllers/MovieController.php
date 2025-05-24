@@ -7,8 +7,17 @@ use Illuminate\Support\Facades\Http;
 
 class MovieController extends Controller
 {
-    private $apiKey = '71c89a47c1413bff524aadbacb25959b';
     private $keywords = [];
+    protected $data;
+    protected $apiKey;
+    protected $responseController;
+    public function __construct()
+    {
+        $this->data = new data();
+        $this->apiKey = env('TMDB_API_KEY');
+        $this->responseController = new responseController(false);
+    }
+    
 
     public function welcome()
     {
@@ -55,13 +64,38 @@ class MovieController extends Controller
 
     public function popular()
     {
-        $response = Http::get("https://api.themoviedb.org/3/movie/popular?api_key={$this->apiKey}");
-
+        $response =$this->responseController->make_request(
+        ['link' => 'https://api.themoviedb.org/3/movie/popular'], []);    
         if ($response->successful()) {
-            $movies = $response->json()['results'];
+            $this->data->prepareMovies($response->json()['results'] ?? []);   
+            $movies = $this->data->getMovies();
             return view('popular', compact('movies'));
         }
+        return abort(404);
+    }
+    public function upcoming()
+    {
+        $response = Http::get("https://api.themoviedb.org/3/movie/upcoming?api_key={$this->apiKey}");
 
+        if ($response->successful()) {
+            $this->data->prepareMovies($response->json()['results'] ?? []);   
+            $movies = $this->data->getMovies();
+            return view('upcoming', compact('movies'));
+        }
+
+        return abort(404);
+    }
+    public function trending()
+    {
+        $moviesResponse =$this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/discover/movie'], [
+                    'sort_by' => 'popularity.desc'
+                ]);
+        $response = Http::get("https://api.themoviedb.org/3/movie/trending?api_key={$this->apiKey}");
+        if ($response->successful()) {
+            $this->data->prepareMovies($response->json()['results'] ?? []);   
+            $movies = $this->data->getMovies();
+            return view('trending', compact('movies'));
+        }
         return abort(404);
     }
 
@@ -69,21 +103,26 @@ class MovieController extends Controller
     {
         // NOTE: The current functionality doesn't filter by keyword, it just shows popular movies.
         // To properly filter by keyword, you would need a different API call.
-        $response = Http::get("https://api.themoviedb.org/3/search/keyword?api_key={$this->apiKey}&query={$keyword}");
-
+        
+        $response =$this->responseController->make_request(
+            ['link' => 'https://api.themoviedb.org/3/search/keyword'], [
+            'query' => $keyword,
+        ]);
         if ($response->successful()) {
             $keywordData = $response->json();
             $keywordId = $keywordData['results'][0]['id'] ?? null;
-
             if ($keywordId) {
-                $moviesResponse = Http::get("https://api.themoviedb.org/3/discover/movie?api_key={$this->apiKey}&with_keywords={$keywordId}");
+                $moviesResponse =$this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/discover/movie'], [
+                    'with_keywords' => $keywordId,
+                ]);
                 if ($moviesResponse->successful()) {
-                    $movies = $moviesResponse->json()['results'];
+                    $this->data->prepareMovies($moviesResponse->json()['results'] ?? []);   
+                    $movies = $this->data->getMovies();
+                    // Return the view with the movies, but you may need to adjust the view to handle the keyword searc
                     return view('popular', compact('movies'));
                 }
             }
         }
-
         return abort(404);
     }
 }

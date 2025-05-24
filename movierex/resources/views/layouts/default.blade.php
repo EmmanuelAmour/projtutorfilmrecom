@@ -31,7 +31,7 @@
     </style>
 </head>
 
-<body class="bg-gray-900 text-white">
+<body class="bg-white-900 ">
     <!-- Logo vectoriel SVG -->
     <x-header />
     <main class="container mx-auto px-4 py-8 space-y-12">

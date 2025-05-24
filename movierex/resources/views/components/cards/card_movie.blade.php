@@ -30,4 +30,10 @@
             </div>
         </div>
     </div>
+    <style>
+        .movie-card {
+            border: 1px solid #cccccc86;
+        }
+    </style>
+
 </a>
