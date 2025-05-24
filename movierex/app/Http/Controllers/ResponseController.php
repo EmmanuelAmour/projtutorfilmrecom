@@ -30,7 +30,19 @@ class ResponseController extends Controller
         }
         $this->certification_country = 'US';
     }
+    public function set_audience($adult){
+        if($adult == true){
+            $this->include_adult = true;
+            $this->certification = 'R';
+        }
+        else{
+            $this->include_adult = false;
+            $this->certification = 'PG-13';
+        }
+        $this->certification_country = 'US';
+    }
     public function make_request($array, array $query){
+        $this->set_audience(false);
         $baseParams = [
             'api_key' => $this->apiKey,
             'include_adult' => $this->include_adult,
