@@ -20,15 +20,7 @@ class ResponseController extends Controller
     protected $include_adult;
     public function __construct($adult){
         $this->apiKey = env('TMDB_API_KEY');   
-        if($adult == true){
-            $this->include_adult = true;
-            $this->certification = 'R';
-        }
-        else{
-            $this->include_adult = false;
-            $this->certification = 'PG-13';
-        }
-        $this->certification_country = 'US';
+        $this->set_audience($adult);
     }
     public function set_audience($adult){
         if($adult == true){
