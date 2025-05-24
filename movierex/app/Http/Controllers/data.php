@@ -7,10 +7,6 @@ use Illuminate\Http\Request;
 class Data extends Controller
 {
     protected $movies = [];
-
-    
-
-
     // Set movies array
     public function setMovies(array $movies)
     {
@@ -29,7 +25,6 @@ class Data extends Controller
         if (empty($this->movies)) {
             return false; // or throw an exception if preferred
         }
-
         usort($this->movies, function ($a, $b) use ($key, $order) {
             if (!isset($a[$key]) || !isset($b[$key])) {
                 return 0;
@@ -42,8 +37,7 @@ class Data extends Controller
 
         return true; // success
     }
-
-
+    // Remove adult movies
     public function removeAdultMovies()
     {
         if (empty($this->movies)) {
