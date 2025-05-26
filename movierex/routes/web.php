@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\MovieSearchController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 //|--------------------------------------------------------------------------
@@ -24,3 +25,8 @@ Route::get('/movies/western', [UserController::class, 'getWesternMovies']);
 Route::get('/movies/popular', [UserController::class, 'getPopularMovies']);
 
 include __DIR__ . '/search.php';
+
+// Routes d'authentification
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
