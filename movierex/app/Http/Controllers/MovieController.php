@@ -66,37 +66,42 @@ class MovieController extends Controller
     {
         $response =$this->responseController->make_request(
         ['link' => 'https://api.themoviedb.org/3/movie/popular'], []);    
-        if ($response->successful()) {
-            $this->data->prepareMovies($response->json()['results'] ?? []);   
-            $movies = $this->data->getMovies();
-            return view('popular', compact('movies'));
-        }
-        return abort(404);
+        $this->data->set_all($response);
+        return view('popular', [
+            'movies' => $this->data->getMovies(),
+            'page' => $this->data->getPage(),
+            'total_pages' => $this->data->getTotalPages(),
+            'total_results' => $this->data->getTotalResults(),
+        ]); 
     }
     public function upcoming()
     {
-        $response = Http::get("https://api.themoviedb.org/3/movie/upcoming?api_key={$this->apiKey}");
-
-        if ($response->successful()) {
-            $this->data->prepareMovies($response->json()['results'] ?? []);   
-            $movies = $this->data->getMovies();
-            return view('upcoming', compact('movies'));
-        }
-
-        return abort(404);
+        $response = 
+        $this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/movie/upcoming'], [
+        ]);
+        $this->data->set_all($response);
+        return view('upcoming', [
+            'movies' => $this->data->getMovies(),
+            'page' => $this->data->getPage(),
+            'total_pages' => $this->data->getTotalPages(),
+            'total_results' => $this->data->getTotalResults(),
+            'isLiked' => false
+        ]);
     }
     public function trending()
     {
-        $moviesResponse =$this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/discover/movie'], [
-                    'sort_by' => 'popularity.desc'
-                ]);
-        $response = Http::get("https://api.themoviedb.org/3/movie/trending?api_key={$this->apiKey}");
-        if ($response->successful()) {
-            $this->data->prepareMovies($response->json()['results'] ?? []);   
-            $movies = $this->data->getMovies();
-            return view('trending', compact('movies'));
-        }
-        return abort(404);
+        $response = 
+        $this->responseController->
+        make_request(['link' => 'https://api.themoviedb.org/3/trending/movie/day'], [
+        ]);
+        $this->data->set_all($response);
+        return view('upcoming', [
+            'movies' => $this->data->getMovies(),
+            'page' => $this->data->getPage(),
+            'total_pages' => $this->data->getTotalPages(),
+            'total_results' => $this->data->getTotalResults(),
+            'isLiked' => false
+        ]);
     }
 
     public function byKeyword($keyword)
@@ -125,4 +130,7 @@ class MovieController extends Controller
         }
         return abort(404);
     }
+
+
+    
 }

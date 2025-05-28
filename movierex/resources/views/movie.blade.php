@@ -47,7 +47,6 @@
     <!-- resources/views/movie.blade.php -->
     <!-- resources/views/movie.blade.php -->
     <x-header />
-
     <div class="min-h-screen bg-gray-900">
         <!-- Backdrop Layer -->
         <div class="fixed inset-0 -z-10 opacity-25">
@@ -103,8 +102,6 @@
                                 </svg>
                                 <span class="text-sm font-medium">{{ $movie['runtime'] }} min</span>
                             </div>
-
-
                             <div class="flex items-center space-x-2 p-2 bg-gray-100/80 rounded-lg">
                                 <span>Genres:</span>
                             </div>

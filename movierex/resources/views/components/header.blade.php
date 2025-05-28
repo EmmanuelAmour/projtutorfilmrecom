@@ -5,13 +5,13 @@
             class="flex items-center space-x-3 hover:scale-105 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded">
             <img src="{{ asset('img/logo_no_bg.png') }}" alt="movieRex - Accueil" class="h-10 w-10" loading="lazy">
             <h1 class="text-3xl font-bold bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
-                movieRex
+                MovieRex
             </h1>
         </a>
 
         <!-- Barre de recherche -->
         <div class="flex-1 min-w-[300px] max-w-xl order-last lg:order-none w-full lg:w-auto">
-            <form id="search-form" action="/search" method="GET" class="relative">
+            <form id="search-form" action="/search/movie/" method="GET" class="relative">
                 <input type="text" name="query" id="search-input"
                     placeholder="Rechercher un film, série, acteur..."
                     class="w-full px-4 py-2 rounded-full bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
@@ -84,7 +84,7 @@
         e.preventDefault();
         const query = document.getElementById('search-input').value.trim();
         if (query) {
-            window.location.href = `/search/${encodeURIComponent(query)}`;
+            window.location.href = `/search/movie/${encodeURIComponent(query)}`;
         } else {
             const input = document.getElementById('search-input');
             input.focus();

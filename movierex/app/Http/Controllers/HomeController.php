@@ -29,7 +29,7 @@ class HomeController extends Controller
         if ($response->successful()) {
 
             // Removed calls to get*Movies as they are not defined in the User model.
-            $movies = $response->json()['results'];
+            //$movies = $response->json()['results'];
             return view('home', [
                 'popular_movies' => $this->userController->getPopularMovies(),
                 'keyword_movies' => $this->userController->getPopularMovies(),

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ asset('img/logo_no_bg.png') }}" type="image/png">
 
-    <title> MovieRex </title>
+    <title> MovieRex @yield('title') </title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
         integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM8d7xj1z5l5e5e5e5e5e5e5e5e5e5e5e5e5" crossorigin="anonymous">
@@ -38,6 +38,7 @@
         @yield('content')
         <!-- Sections par catégorie -->
     </main>
+
     <script>
         // Carrousel horizontal
         const carousel = document.querySelector('.movie-carousel');
