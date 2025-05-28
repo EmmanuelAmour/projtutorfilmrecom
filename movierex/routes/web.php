@@ -6,6 +6,7 @@ use App\Http\Controllers\MovieController;
 use App\Http\Controllers\MovieSearchController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 //|--------------------------------------------------------------------------
@@ -34,5 +35,14 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 
-Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
+// Routes de réinitialisation de mot de passe
+Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])
     ->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLinkEmail'])
+    ->name('password.email');
+Route::get('/reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])
+    ->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])
+    ->name('password.update');
+// Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
+//     ->name('password.request');

@@ -1,7 +1,7 @@
-@extends('layouts.default')
+@extends('first.default')
 
 @section('content')
-<div class="min-h-screen flex items-center justify-center bg-gray-900">
+<div class="min-h-screen flex items-center justify-center" style="background-color: rgb(17, 24, 39);">
     <div class="bg-gray-800 p-8 rounded-xl shadow-xl w-full max-w-md">
         <h2 class="text-2xl font-bold text-amber-400 mb-6 text-center">Connexion</h2>
 
@@ -48,6 +48,14 @@
                 Se connecter
             </button>
         </form>
+
+        @if ($errors->any())
+            <div class="mt-4 bg-red-600 text-white p-3 rounded">
+                @foreach ($errors->all() as $error)
+                    <p class="text-sm">{{ $error }}</p>
+                @endforeach
+            </div>
+        @endif
     </div>
 </div>
 @endsection
