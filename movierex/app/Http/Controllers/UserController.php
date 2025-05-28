@@ -58,4 +58,8 @@ class UserController extends Controller
             'page' => 1
         ])->json()['results'] ?? [];
     }
+
+    public function like_genre(){
+        //$user = Session::get('user')  
+    }
 }

@@ -25,6 +25,7 @@
             @endforeach
         </div>
     </section>
+    <x-throw1 />
 
     <!-- Sections catégories - Grille uniforme -->
     <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">

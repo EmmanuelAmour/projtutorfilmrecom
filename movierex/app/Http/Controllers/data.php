@@ -3,21 +3,54 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Http\Client\Response;
 class Data extends Controller
 {
     protected $movies = [];
-    // Set movies array
+    protected $page;
+    protected $total_results;
+    protected $total_pages;
+    //SETTERS AND GETTERS====================================================================
+    public function getPage()
+    {
+        return $this->page;
+    }
+
+    public function setPage($page)
+    {
+        $this->page = $page;
+        return $this;
+    }
+    public function getTotalPages()
+    {
+        return $this->total_pages;
+    }
+
+    public function setTotalPages($total_pages)
+    {
+        $this->total_pages = $total_pages;
+        return $this;
+    }
+    public function getTotalResults()
+    {
+        return $this->total_results;
+    }
+
+    public function setTotalResults($total_results)
+    {
+        $this->total_results = $total_results;
+        return $this;
+    }
     public function setMovies(array $movies)
     {
         $this->movies = $movies;
     }
 
-    // Get movies array
     public function getMovies()
     {
         return $this->movies;
     }
+    //==================================================================
 
     // Sort movies by a given key and order
     public function sortMoviesBy($key, $order = 'asc')
@@ -34,7 +67,6 @@ class Data extends Controller
                 ? $a[$key] <=> $b[$key]
                 : $b[$key] <=> $a[$key];
         });
-
         return true; // success
     }
     // Remove adult movies
@@ -58,5 +90,19 @@ class Data extends Controller
         $this->sortMoviesBy('vote_average', 'desc');
         return $this->getMovies();
     }
-
+    public function set_all(Response $result){
+        if ( $result->successful() ) {
+            $this->setMovies($result->json()['results']?? []);
+            $this->setPage($result->json()['page']?? 1);
+            $this->setTotalPages($result->json()['total_pages']?? 1);
+            $this->setTotalResults($result->json()['total_results']?? 1);
+        }
+        else{
+            return abort(500,'Something went wrong');
+        }
+        $this->removeAdultMovies();
+        $this->sortMoviesBy('popularity', 'desc');
+        $this->sortMoviesBy('vote_average', 'desc');
+        return $this->getMovies();
+    }
 }

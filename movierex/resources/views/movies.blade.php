@@ -6,4 +6,7 @@
             <x-cards.card_movie :movie="$movie" :index="$index" />
         @endforeach
     </div>
+
+    {{-- Ajout de la pagination --}}
+    <x-pagination :currentPage="$page" :totalPages="$total_pages" :query="$page" />
 @endsection

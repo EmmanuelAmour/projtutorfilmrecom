@@ -12,9 +12,6 @@ class MovieSearchController extends Controller
     protected $data;
     protected $apiKey;
     protected $responseController;
-
-
-
     public function __construct()
     {
         $this->data = new data();
@@ -22,18 +19,56 @@ class MovieSearchController extends Controller
         $this->responseController = new responseController(false);
     }
 
-    public function search($query)
+    public function search($query, $page = 1)
     {
-        $response =$this->responseController->make_request(
-            ['link' => 'https://api.themoviedb.org/3/search/movie'], [
+        $response = $this->responseController->make_request([
+            'link' => 'https://api.themoviedb.org/3/search/movie'
+        ], [
+            'api_key' => $this->apiKey,
             'query' => $query,
+            'page' => $page // Ajout du paramètre de pagination
         ]);
-        if ($response->successful()) {
-            $this->data->prepareMovies($response->json()['results'] ?? []);   
-            return view('movies', [
-                'movies' => $this->data->getMovies(),
-                'pageTitle' => 'Search Results for "' . $query . '"'
-            ]);
+
+        $this->data->set_all($response);
+        return view('movies', [
+            'movies' => $this->data->getMovies(),
+            'page' => $this->data->getPage(),
+            'totalPages' => $this->data->getTotalPages(),
+            'query' => $query,
+            'pageTitle' => 'Search Results for "' . $query . '"',
+            'isLiked' => false
+        ]);
+    }
+    public function searchByGenre($genre, $page = 1)
+    {
+        $genreResponse = $this->responseController->make_request(
+            ['link' => 'https://api.themoviedb.org/3/genre/movie/list'],
+            [
+                'api_key' => $this->apiKey
+            ]
+        );
+
+        if ($genreResponse->successful()) {
+            $genres = $genreResponse->json()['genres'];
+            $genreId = collect($genres)->firstWhere('name', ucfirst(strtolower($genre)))['id'] ?? null;
+
+            if ($genreId) {
+                $response = $this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/discover/movie'], [
+                    'api_key' => $this->apiKey,
+                    'with_genres' => $genreId,
+                    'page' => $page // Ajout du paramètre de pagination
+
+                ]);
+                $this->data->set_all($response);
+                return view('genre', [
+                    'movies' => $this->data->getMovies(),
+                    'page' => $this->data->getPage(),
+                    'total_pages' => $this->data->getTotalPages(),
+                    'total_results' => $this->data->getTotalResults(),
+                    'genre' => $genre,
+                    'isLiked' => false
+                ]);
+            }
         }
 
         return abort(404);
@@ -41,52 +76,18 @@ class MovieSearchController extends Controller
 
     public function searchByKeyword($keyword)
     {
-        $response = Http::get(
-            "https://api.themoviedb.org/3/search/keyword",
-            [
-                'api_key' => $this->apiKey,
-                'query' => $keyword
-            ]
-        );
-        if ($response->successful()) {
-            $this->data->prepareMovies($response->json()['results'] ?? []);   
-            //dd($movies);
-            return view('movies', [
-                'movies' => $this->data->getMovies(), // No movies directly here!
-                'pageTitle' => 'Keywords Found for "' . $keyword . '"'
-            ]);
-        }
-        return abort(404);
-    }
-
-    public function searchByGenre($genre)
-    {
-        $genreResponse = Http::get("https://api.themoviedb.org/3/genre/movie/list", [
-            'api_key' => $this->apiKey
+        $response = $this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/search/keyword'], [
+            'api_key' => $this->apiKey,
+            'query' => $keyword
         ]);
-        if ($genreResponse->successful()) {
-            $genres = $genreResponse->json()['genres'];
-
-            // Find genre ID by name
-            $genreId = collect($genres)->firstWhere('name', ucfirst(strtolower($genre)))['id'] ?? null;
-
-            if ($genreId) {
-                $response = Http::get("https://api.themoviedb.org/3/discover/movie", [
-                    'api_key' => $this->apiKey,
-                    'with_genres' => $genreId
-                ]);
-
-                if ($response->successful()) {
-                    $this->data->prepareMovies($response->json()['results'] ?? []);   
-                    return view('movies', [
-                        'movies' => $this->data->getMovies(),
-                        'pageTitle' => 'Movies in Genre: ' . ucfirst($genre)
-                    ]);
-                }
-            }
-        }
-
-        return abort(404);
+        $this->data->set_all($response);
+        return view('movies', [
+            'movies' => $this->data->getMovies(),
+            'page' => $this->data->getPage(),
+            'total_pages' => $this->data->getTotalPages(),
+            'total_results' => $this->data->getTotalResults(),
+            'isLiked' => false
+        ]);
     }
 
     public function searchByYear($year)
@@ -94,81 +95,76 @@ class MovieSearchController extends Controller
         if (empty($this->apiKey)) {
             return abort(500, 'API key not set.');
         }
-        $response = Http::get("https://api.themoviedb.org/3/discover/movie", [
+        $response = $this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/discover/movie'], [
             'api_key' => $this->apiKey,
             'primary_release_year' => $year
         ]);
-        if ($response->successful()) {
-            $this->data->prepareMovies($response->json()['results'] ?? []);
-            return view('movies', [
-                'movies' => $this->data->getMovies(),
-                'pageTitle' => 'Movies Released in ' . $year . ' (Sorted by Rating) || total_results  ' . $response->json()['total_results'] . ' movies'
-            ]);
-        }
-
-        return view('error', ['message' => 'Could not fetch movie data.']);
+        $this->data->set_all($response);
+        return view('movies', [
+            'movies' => $this->data->getMovies(),
+            'page' => $this->data->getPage(),
+            'total_pages' => $this->data->getTotalPages(),
+            'total_results' => $this->data->getTotalResults(),
+            'pageTitle' => 'Movies Released in ' . $year . ' (Sorted by Rating)',
+            'isLiked' => false
+        ]);
     }
-
 
     public function searchByRating($rating)
     {
-        //$rating = $request->input('rating');
-        $response = Http::get("https://api.themoviedb.org/3/discover/movie", [
+        $response = $this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/discover/movie'], [
             'api_key' => $this->apiKey,
             'vote_average.gte' => $rating
         ]);
-
-        if ($response->successful()) {
-            $this->data->prepareMovies($response->json()['results'] ?? []);
-            return view('movies', [
-                'movies' => $this->data->getMovies(),
-                'pageTitle' => 'Movies Rated Above ' . $rating . '★'
-            ]);
-        }
-
-        return abort(404);
+        $this->data->set_all($response);
+        return view('movies', [
+            'movies' => $this->data->getMovies(),
+            'page' => $this->data->getPage(),
+            'total_pages' => $this->data->getTotalPages(),
+            'total_results' => $this->data->getTotalResults(),
+            'pageTitle' => 'Movies Rated Above ' . $rating . '★',
+            'isLiked' => false
+        ]);
     }
 
     public function searchByLanguage($language)
     {
-        $response = Http::get("https://api.themoviedb.org/3/discover/movie", [
+        $response = $this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/discover/movie'], [
             'api_key' => $this->apiKey,
             'with_original_language' => $language
         ]);
-
-        if ($response->successful()) {
-            $this->data->prepareMovies($response->json()['results'] ?? []);
-            return view('movies', [
-                'movies' => $this->data->getMovies(),
-                'pageTitle' => 'Movies in Language: ' . strtoupper($language)
-            ]);
-        }
-
-        return abort(404);
+        $this->data->set_all($response);
+        return view('movies', [
+            'movies' => $this->data->getMovies(),
+            'page' => $this->data->getPage(),
+            'total_pages' => $this->data->getTotalPages(),
+            'total_results' => $this->data->getTotalResults(),
+            'pageTitle' => 'Movies in Language: ' . strtoupper($language),
+            'isLiked' => false
+        ]);
     }
 
     public function searchByCountry($country)
     {
-        $response = Http::get("https://api.themoviedb.org/3/discover/movie", [
+        $response = $this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/discover/movie'], [
             'api_key' => $this->apiKey,
             'country' => $country
         ]);
-
-        if ($response->successful()) {
-            $this->data->prepareMovies(movies: $response->json()['results'] ?? []);
-            return view('movies', [
-                'movies' => $this->data->getMovies(),
-                'pageTitle' => 'Movies Released in ' . strtoupper($country)
-            ]);
-        }
-
-        return abort(404);
+        $this->data->set_all($response);
+        return view('movies', [
+            'movies' => $this->data->getMovies(),
+            'page' => $this->data->getPage(),
+            'total_pages' => $this->data->getTotalPages(),
+            'total_results' => $this->data->getTotalResults(),
+            'pageTitle' => 'Movies Released in ' . strtoupper($country),
+            'isLiked' => false
+        ]);
     }
 
     public function searchByActor(Request $request)
     {
         $actor = $request->input('actor');
-        $personResponse = Http::get("https://api.themoviedb.org/3/search/person", [
+        $personResponse = $this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/search/person'], [
             'api_key' => $this->apiKey,
             'query' => $actor
         ]);
@@ -177,22 +173,24 @@ class MovieSearchController extends Controller
             $actorData = $personResponse->json()['results'][0] ?? null;
             if ($actorData) {
                 $actorId = $actorData['id'];
-                $movieCredits = Http::get("https://api.themoviedb.org/3/person/{$actorId}/movie_credits", [
-                    'api_key' => $this->apiKey
+                $response = $this->responseController->make_request(
+                    ['link' => "https://api.themoviedb.org/3/person/{$actorId}/movie_credits"],
+                    ['api_key' => $this->apiKey]
+                );
+                $this->data->set_all($response);
+                return view('movies', [
+                    'movies' => $this->data->getMovies(),
+                    'page' => $this->data->getPage(),
+                    'total_pages' => $this->data->getTotalPages(),
+                    'total_results' => $this->data->getTotalResults(),
+                    'pageTitle' => 'Movies Starring ' . $actor,
+                    'isLiked' => false
                 ]);
-                if ($movieCredits->successful()) {
-                    $movies = $movieCredits->json()['cast'];
-                    return view('movies', [
-                        'movies' => $movies,
-                        'pageTitle' => 'Movies Starring ' . $actor
-                    ]);
-                }
             }
         }
-
         return abort(404);
     }
-    
+
 
     // For Director, Producer, Writer, Composer, Cinematographer, Editor:
     // (Similar to Actor but you filter by job)
