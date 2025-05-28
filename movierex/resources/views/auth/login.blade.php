@@ -22,12 +22,23 @@
                     focus:outline-none focus:ring-2 focus:ring-amber-400">
             </div>
 
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <input type="checkbox" name="remember" id="remember"
-                        class="h-4 w-4 text-amber-400 focus:ring-amber-400 border-gray-600 rounded">
-                    <label for="remember" class="ml-2 block text-sm text-gray-300">Se souvenir de moi</label>
-                </div>
+            <div class="mt-4">
+                <label class="flex items-center">
+                    <input type="checkbox" name="remember" class="form-checkbox">
+                    <span class="ml-2 text-sm">Rester connecté</span>
+                </label>
+            </div>
+
+            <div class="flex items-center justify-between mt-6">
+                @if (Route::has('password.request'))
+                    <a class="text-sm text-blue-600 hover:underline" href="{{ route('password.request') }}">
+                        Mot de passe oublié?
+                    </a>
+                @endif
+
+                <a class="text-sm text-blue-600 hover:underline ml-4" href="{{ route('register') }}">
+                    Créer un compte
+                </a>
             </div>
 
             <button type="submit"

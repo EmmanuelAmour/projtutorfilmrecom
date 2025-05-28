@@ -27,23 +27,55 @@
             </form>
         </div>
 
-        <!-- Navigation -->
-        <nav class="flex space-x-4 overflow-x-auto py-2 scrollbar-hide">
-            <div class="flex gap-4">
-                <a href="/popular"
-                    class="text-white hover:text-amber-400 transition-colors px-3 py-1 rounded-lg hover:bg-gray-700/50 whitespace-nowrap">Popular</a>
-                <a href="/upcoming"
-                    class="text-white hover:text-amber-400 transition-colors px-3 py-1 rounded-lg hover:bg-gray-700/50">Upcoming</a>
-                <a href="/trending"
-                    class="text-white hover:text-amber-400 transition-colors px-3 py-1 rounded-lg hover:bg-gray-700/50">Trending</a>
-                <a href="/top-rated"
-                    class="text-white hover:text-amber-400 transition-colors px-3 py-1 rounded-lg hover:bg-gray-700/50">Top
-                    Rated</a>
-                <a href="/now-playing"
-                    class="text-white hover:text-amber-400 transition-colors px-3 py-1 rounded-lg hover:bg-gray-700/50">Now
-                    Playing</a>
+        <!-- Navigation et Bouton de connexion -->
+        <div class="flex items-center space-x-6">
+            <!-- Navigation -->
+            <nav class="flex space-x-4 overflow-x-auto py-2 scrollbar-hide">
+                <div class="flex gap-4">
+                    <a href="/popular"
+                        class="text-white hover:text-amber-400 transition-colors px-3 py-1 rounded-lg hover:bg-gray-700/50 whitespace-nowrap">Popular</a>
+                    <a href="/upcoming"
+                        class="text-white hover:text-amber-400 transition-colors px-3 py-1 rounded-lg hover:bg-gray-700/50">Upcoming</a>
+                    <a href="/trending"
+                        class="text-white hover:text-amber-400 transition-colors px-3 py-1 rounded-lg hover:bg-gray-700/50">Trending</a>
+                    <a href="/top-rated"
+                        class="text-white hover:text-amber-400 transition-colors px-3 py-1 rounded-lg hover:bg-gray-700/50">Top
+                        Rated</a>
+                    <a href="/now-playing"
+                        class="text-white hover:text-amber-400 transition-colors px-3 py-1 rounded-lg hover:bg-gray-700/50">Now
+                        Playing</a>
+                </div>
+            </nav>
+
+            <!-- Bouton de connexion -->
+            <div class="flex items-center space-x-3">
+                @auth
+                    <!-- Si l'utilisateur est connecté -->
+                    <div class="flex items-center space-x-3">
+                        <span class="text-white text-sm">Bonjour, {{ Auth::user()->name }}</span>
+                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                            @csrf
+                            <button type="submit"
+                                class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-400">
+                                Déconnexion
+                            </button>
+                        </form>
+                    </div>
+                @else
+                    <!-- Si l'utilisateur n'est pas connecté -->
+                    <div class="flex items-center space-x-2">
+                        <a href="{{ route('login') }}"
+                            class="bg-amber-400 hover:bg-amber-500 text-gray-900 px-4 py-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-amber-300">
+                            Se connecter
+                        </a>
+                        <a href="{{ route('register') }}"
+                            class="border border-amber-400 text-amber-400 hover:bg-amber-400 hover:text-gray-900 px-4 py-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-amber-300">
+                            S'inscrire
+                        </a>
+                    </div>
+                @endauth
             </div>
-        </nav>
+        </div>
     </div>
 </header>
 
