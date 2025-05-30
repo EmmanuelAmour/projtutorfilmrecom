@@ -28,7 +28,6 @@ Route::group(['prefix' => ''], function () {
     Route::get('/movie/{id}/account/states', [MovieController::class, 'accountStates']);
 
 
-    //aaa
     include __DIR__ . '/search.php';
 
     // Routes d'authentification
