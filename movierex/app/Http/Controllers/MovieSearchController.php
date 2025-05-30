@@ -33,7 +33,7 @@ class MovieSearchController extends Controller
         return view('movies', [
             'movies' => $this->data->getMovies(),
             'page' => $this->data->getPage(),
-            'totalPages' => $this->data->getTotalPages(),
+            'total_pages' => $this->data->getTotalPages(),
             'query' => $query,
             'pageTitle' => 'Search Results for "' . $query . '"',
             'isLiked' => false

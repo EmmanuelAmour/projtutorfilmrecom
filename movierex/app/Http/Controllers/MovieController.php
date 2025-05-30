@@ -17,7 +17,7 @@ class MovieController extends Controller
         $this->apiKey = env('TMDB_API_KEY');
         $this->responseController = new responseController(false);
     }
-    
+
 
     public function welcome()
     {
@@ -32,7 +32,7 @@ class MovieController extends Controller
         }
         return $this->keywords;
     }
-    public function show_movie_single($id)
+    public function show($id)
     {
         $response = Http::get("https://api.themoviedb.org/3/movie/{$id}?api_key={$this->apiKey}");
         $keywords = $this->set_keywords($id);
@@ -64,21 +64,22 @@ class MovieController extends Controller
 
     public function popular()
     {
-        $response =$this->responseController->make_request(
-        ['link' => 'https://api.themoviedb.org/3/movie/popular'], []);    
+        $response = $this->responseController->make_request(
+            ['link' => 'https://api.themoviedb.org/3/movie/popular'],
+            []
+        );
         $this->data->set_all($response);
         return view('popular', [
             'movies' => $this->data->getMovies(),
             'page' => $this->data->getPage(),
             'total_pages' => $this->data->getTotalPages(),
             'total_results' => $this->data->getTotalResults(),
-        ]); 
+        ]);
     }
     public function upcoming()
     {
-        $response = 
-        $this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/movie/upcoming'], [
-        ]);
+        $response =
+            $this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/movie/upcoming'], []);
         $this->data->set_all($response);
         return view('upcoming', [
             'movies' => $this->data->getMovies(),
@@ -90,10 +91,8 @@ class MovieController extends Controller
     }
     public function trending()
     {
-        $response = 
-        $this->responseController->
-        make_request(['link' => 'https://api.themoviedb.org/3/trending/movie/day'], [
-        ]);
+        $response =
+            $this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/trending/movie/day'], []);
         $this->data->set_all($response);
         return view('upcoming', [
             'movies' => $this->data->getMovies(),
@@ -108,20 +107,22 @@ class MovieController extends Controller
     {
         // NOTE: The current functionality doesn't filter by keyword, it just shows popular movies.
         // To properly filter by keyword, you would need a different API call.
-        
-        $response =$this->responseController->make_request(
-            ['link' => 'https://api.themoviedb.org/3/search/keyword'], [
-            'query' => $keyword,
-        ]);
+
+        $response = $this->responseController->make_request(
+            ['link' => 'https://api.themoviedb.org/3/search/keyword'],
+            [
+                'query' => $keyword,
+            ]
+        );
         if ($response->successful()) {
             $keywordData = $response->json();
             $keywordId = $keywordData['results'][0]['id'] ?? null;
             if ($keywordId) {
-                $moviesResponse =$this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/discover/movie'], [
+                $moviesResponse = $this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/discover/movie'], [
                     'with_keywords' => $keywordId,
                 ]);
                 if ($moviesResponse->successful()) {
-                    $this->data->prepareMovies($moviesResponse->json()['results'] ?? []);   
+                    $this->data->prepareMovies($moviesResponse->json()['results'] ?? []);
                     $movies = $this->data->getMovies();
                     // Return the view with the movies, but you may need to adjust the view to handle the keyword searc
                     return view('popular', compact('movies'));
@@ -130,7 +131,4 @@ class MovieController extends Controller
         }
         return abort(404);
     }
-
-
-    
 }
