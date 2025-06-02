@@ -52,7 +52,7 @@
                 @auth
                     <!-- Si l'utilisateur est connecté -->
                     <div class="flex items-center space-x-3">
-                        <span class="text-white text-sm">Bonjour, {{ Auth::user()->name }}</span>
+                        <span class="text-white text-sm">{{ Auth::user()->name }}</span>
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
                             <button type="submit"
