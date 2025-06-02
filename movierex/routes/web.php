@@ -30,6 +30,8 @@ Route::group(['prefix' => ''], function () {
 
     include __DIR__ . '/search.php';
 
+    aaaaa
+
     // Routes d'authentification
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
