@@ -79,7 +79,7 @@ class AuthController extends Controller
 
         return redirect('/')->with('success', 'Compte créé avec succès!');
     }
-    
+
     /**
      * Afficher le formulaire de demande de réinitialisation
      */
