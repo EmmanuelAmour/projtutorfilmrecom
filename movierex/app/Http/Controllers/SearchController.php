@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\data;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -58,7 +59,7 @@ class SearchController extends Controller
     // SearchController.php
     public function searchActor($name)
     {
-        
+
 
         $response = Http::get('https://api.themoviedb.org/3/search/person', [
             'api_key' => $this->apiKey,

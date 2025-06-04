@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
 
 class MovieController extends Controller
 {
@@ -15,7 +17,13 @@ class MovieController extends Controller
     {
         $this->data = new data();
         $this->apiKey = env('TMDB_API_KEY');
-        $this->responseController = new responseController(false);
+        $login = Session::get('login');
+        $currentYear = Carbon::now()->year;
+        $adult = false;
+        if ($currentYear - $login->birth_date->year >= 18) {
+            $adult = true;
+        }
+        $this->responseController = new responseController($adult);
     }
 
 

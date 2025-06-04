@@ -10,6 +10,7 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Password as PasswordBroker;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -27,6 +28,8 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            $login = User::where('email', $request->email)->first();
+            Session::put('login', $login);
             return redirect()->intended('/');
         }
 
@@ -37,6 +40,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        Session::forget('login');
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
@@ -74,7 +78,7 @@ class AuthController extends Controller
             'birth_date' => $request->birth_date,
             'password' => Hash::make($request->password),
         ]);
-
+        Session::put('login', $user);
         Auth::login($user);
 
         return redirect('/')->with('success', 'Compte créé avec succès!');

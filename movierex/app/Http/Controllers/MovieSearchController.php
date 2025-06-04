@@ -6,17 +6,19 @@ use App\Http\Controllers\data;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
 
-class MovieSearchController extends Controller
+
+
+class MovieSearchController extends MovieController
 {
     protected $data;
     protected $apiKey;
     protected $responseController;
     public function __construct()
     {
-        $this->data = new data();
-        $this->apiKey = env('TMDB_API_KEY');
-        $this->responseController = new responseController(false);
+        parent::__construct();
     }
 
     public function search($query, $page = 1)
@@ -47,7 +49,6 @@ class MovieSearchController extends Controller
                 'api_key' => $this->apiKey
             ]
         );
-
         if ($genreResponse->successful()) {
             $genres = $genreResponse->json()['genres'];
             $genreId = collect($genres)->firstWhere('name', ucfirst(strtolower($genre)))['id'] ?? null;
@@ -57,7 +58,6 @@ class MovieSearchController extends Controller
                     'api_key' => $this->apiKey,
                     'with_genres' => $genreId,
                     'page' => $page // Ajout du paramètre de pagination
-
                 ]);
                 $this->data->set_all($response);
                 return view('genre', [
@@ -66,6 +66,7 @@ class MovieSearchController extends Controller
                     'total_pages' => $this->data->getTotalPages(),
                     'total_results' => $this->data->getTotalResults(),
                     'genre' => $genre,
+                    'id_genre' => $genreId,
                     'isLiked' => false
                 ]);
             }

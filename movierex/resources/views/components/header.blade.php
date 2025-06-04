@@ -53,7 +53,7 @@
                     <!-- Si l'utilisateur est connecté -->
                     <div class="flex items-center space-x-3">
                         <span class="text-white text-sm">{{ Auth::user()->name }}</span>
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                        <form method="get" action="{{ route('logout') }}" class="inline">
                             @csrf
                             <button type="submit"
                                 class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-400">

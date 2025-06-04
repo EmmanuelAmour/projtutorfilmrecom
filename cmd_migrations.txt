@@ -1,0 +1,21 @@
+# Create migrations
+php artisan make:migration create_users_table
+php artisan make:migration create_genres_table
+php artisan make:migration create_keywords_table
+php artisan make:migration create_movies_table
+php artisan make:migration create_comments_table
+php artisan make:migration create_watchlist_table
+php artisan make:migration create_like_movies_table
+php artisan make:migration create_like_keywords_table
+php artisan make:migration create_like_genres_table
+
+# Create models
+php artisan make:model -m User
+php artisan make:model -m Movie
+php artisan make:model -m Genre
+php artisan make:model -m Keyword
+php artisan make:model -m Comment
+php artisan make:model -m Watchlist
+php artisan make:model -m LikeMovie
+php artisan make:model -m LikeKeyword
+php artisan make:model -m LikeGenre

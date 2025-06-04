@@ -1,0 +1,720 @@
+# Laravel Movie Recommendation System - Commands and Files
+
+## Commands to Create Migrations and Models
+
+```bash
+# Create migrations
+php artisan make:migration create_users_table
+php artisan make:migration create_genres_table
+php artisan make:migration create_keywords_table
+php artisan make:migration create_movies_table
+php artisan make:migration create_comments_table
+php artisan make:migration create_watchlist_table
+php artisan make:migration create_like_movies_table
+php artisan make:migration create_like_keywords_table
+php artisan make:migration create_like_genres_table
+
+# Create models
+php artisan make:model User
+php artisan make:model Movie
+php artisan make:model Genre
+php artisan make:model Keyword
+php artisan make:model Comment
+php artisan make:model Watchlist
+php artisan make:model LikeMovie
+php artisan make:model LikeKeyword
+php artisan make:model LikeGenre
+```
+
+---
+
+## Migration Files
+
+### 1. database/migrations/xxxx_xx_xx_create_users_table.php
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id('id_user');
+            $table->string('username')->unique();
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->string('profile_picture')->nullable();
+            $table->string('role')->default('user');
+            $table->date('birth_date')->nullable();
+            $table->rememberToken();
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('users');
+    }
+};
+```
+
+### 2. database/migrations/xxxx_xx_xx_create_genres_table.php
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('genres', function (Blueprint $table) {
+            $table->id('id_category');
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('genres');
+    }
+};
+```
+
+### 3. database/migrations/xxxx_xx_xx_create_keywords_table.php
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('keywords', function (Blueprint $table) {
+            $table->id('id_seo');
+            $table->string('name');
+            $table->string('meta_keywords')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('keywords');
+    }
+};
+```
+
+### 4. database/migrations/xxxx_xx_xx_create_movies_table.php
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('movies', function (Blueprint $table) {
+            $table->id('id_movie');
+            $table->string('title');
+            $table->text('intro')->nullable();
+            $table->text('outro')->nullable();
+            $table->string('image')->nullable();
+            $table->date('published_at')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('movies');
+    }
+};
+```
+
+### 5. database/migrations/xxxx_xx_xx_create_comments_table.php
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('comments', function (Blueprint $table) {
+            $table->id('id_comment');
+            $table->unsignedBigInteger('id_movie');
+            $table->unsignedBigInteger('id_user');
+            $table->text('comment');
+            $table->timestamps();
+
+            $table->foreign('id_movie')->references('id_movie')->on('movies')->onDelete('cascade');
+            $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('comments');
+    }
+};
+```
+
+### 6. database/migrations/xxxx_xx_xx_create_watchlist_table.php
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('watchlist', function (Blueprint $table) {
+            $table->id('id_watchlist');
+            $table->unsignedBigInteger('id_movie');
+            $table->unsignedBigInteger('id_user');
+            $table->timestamp('ss')->useCurrent();
+            $table->timestamps();
+
+            $table->foreign('id_movie')->references('id_movie')->on('movies')->onDelete('cascade');
+            $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');
+            
+            // Prevent duplicate entries
+            $table->unique(['id_movie', 'id_user']);
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('watchlist');
+    }
+};
+```
+
+### 7. database/migrations/xxxx_xx_xx_create_like_movies_table.php
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('like_movies', function (Blueprint $table) {
+            $table->id('id_like_movies');
+            $table->unsignedBigInteger('id_movie');
+            $table->unsignedBigInteger('id_user');
+            $table->timestamps();
+
+            $table->foreign('id_movie')->references('id_movie')->on('movies')->onDelete('cascade');
+            $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');
+            
+            // Prevent duplicate likes
+            $table->unique(['id_movie', 'id_user']);
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('like_movies');
+    }
+};
+```
+
+### 8. database/migrations/xxxx_xx_xx_create_like_keywords_table.php
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('like_keywords', function (Blueprint $table) {
+            $table->id('id_like_keywords');
+            $table->unsignedBigInteger('id_seo');
+            $table->unsignedBigInteger('id_user');
+            $table->timestamps();
+
+            $table->foreign('id_seo')->references('id_seo')->on('keywords')->onDelete('cascade');
+            $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');
+            
+            // Prevent duplicate likes
+            $table->unique(['id_seo', 'id_user']);
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('like_keywords');
+    }
+};
+```
+
+### 9. database/migrations/xxxx_xx_xx_create_like_genres_table.php
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('like_genres', function (Blueprint $table) {
+            $table->id('id_like_genres');
+            $table->unsignedBigInteger('id_category');
+            $table->unsignedBigInteger('id_user');
+            $table->timestamps();
+
+            $table->foreign('id_category')->references('id_category')->on('genres')->onDelete('cascade');
+            $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');
+            
+            // Prevent duplicate likes
+            $table->unique(['id_category', 'id_user']);
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('like_genres');
+    }
+};
+```
+
+---
+
+## Model Files
+
+### 1. app/Models/User.php
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+
+class User extends Authenticatable
+{
+    use HasApiTokens, HasFactory, Notifiable;
+
+    protected $primaryKey = 'id_user';
+    
+    protected $fillable = [
+        'username',
+        'email',
+        'password',
+        'profile_picture',
+        'role',
+        'birth_date',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'birth_date' => 'date',
+        'password' => 'hashed',
+    ];
+
+    // Relationships
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'id_user', 'id_user');
+    }
+
+    public function watchlist()
+    {
+        return $this->hasMany(Watchlist::class, 'id_user', 'id_user');
+    }
+
+    public function likedMovies()
+    {
+        return $this->belongsToMany(Movie::class, 'like_movies', 'id_user', 'id_movie')
+                    ->withTimestamps();
+    }
+
+    public function likedKeywords()
+    {
+        return $this->belongsToMany(Keyword::class, 'like_keywords', 'id_user', 'id_seo')
+                    ->withTimestamps();
+    }
+
+    public function likedGenres()
+    {
+        return $this->belongsToMany(Genre::class, 'like_genres', 'id_user', 'id_category')
+                    ->withTimestamps();
+    }
+
+    // Custom Methods
+    public function manage_data()
+    {
+        // Implementation for managing user data
+    }
+
+    public function commenter($movie)
+    {
+        return $this->comments()->where('id_movie', $movie->id_movie)->exists();
+    }
+
+    public function like($item)
+    {
+        // Implementation for liking items
+    }
+
+    public function gerer_bookmark()
+    {
+        // Implementation for managing bookmarks
+    }
+
+    public function admin_privilege()
+    {
+        return $this->role === 'admin';
+    }
+}
+```
+
+### 2. app/Models/Movie.php
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Movie extends Model
+{
+    use HasFactory;
+
+    protected $primaryKey = 'id_movie';
+    
+    protected $fillable = [
+        'title',
+        'intro',
+        'outro',
+        'image',
+        'published_at',
+    ];
+
+    protected $casts = [
+        'published_at' => 'date',
+    ];
+
+    // Relationships
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'id_movie', 'id_movie');
+    }
+
+    public function watchlist()
+    {
+        return $this->hasMany(Watchlist::class, 'id_movie', 'id_movie');
+    }
+
+    public function likedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'like_movies', 'id_movie', 'id_user')
+                    ->withTimestamps();
+    }
+
+    // Custom Methods
+    public function manage_data()
+    {
+        // Implementation for managing movie data
+    }
+}
+```
+
+### 3. app/Models/Genre.php
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Genre extends Model
+{
+    use HasFactory;
+
+    protected $primaryKey = 'id_category';
+    
+    protected $fillable = [
+        'name',
+        'description',
+    ];
+
+    // Relationships
+    public function likedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'like_genres', 'id_category', 'id_user')
+                    ->withTimestamps();
+    }
+
+    // Custom Methods
+    public function gestion_donnes()
+    {
+        // Implementation for managing genre data
+    }
+}
+```
+
+### 4. app/Models/Keyword.php
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Keyword extends Model
+{
+    use HasFactory;
+
+    protected $primaryKey = 'id_seo';
+    
+    protected $fillable = [
+        'name',
+        'meta_keywords',
+    ];
+
+    // Relationships
+    public function likedByUsers()
+    {
+        return $this->belongsToMany(User::class, 'like_keywords', 'id_seo', 'id_user')
+                    ->withTimestamps();
+    }
+
+    // Custom Methods
+    public function manage_data()
+    {
+        // Implementation for managing keyword data
+    }
+}
+```
+
+### 5. app/Models/Comment.php
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Comment extends Model
+{
+    use HasFactory;
+
+    protected $primaryKey = 'id_comment';
+    
+    protected $fillable = [
+        'id_movie',
+        'id_user',
+        'comment',
+    ];
+
+    // Relationships
+    public function movie()
+    {
+        return $this->belongsTo(Movie::class, 'id_movie', 'id_movie');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
+
+    // Custom Methods
+    public function manage_data()
+    {
+        // Implementation for managing comment data
+    }
+}
+```
+
+### 6. app/Models/Watchlist.php
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Watchlist extends Model
+{
+    use HasFactory;
+
+    protected $table = 'watchlist';
+    protected $primaryKey = 'id_watchlist';
+    
+    protected $fillable = [
+        'id_movie',
+        'id_user',
+        'ss',
+    ];
+
+    protected $casts = [
+        'ss' => 'datetime',
+    ];
+
+    // Relationships
+    public function movie()
+    {
+        return $this->belongsTo(Movie::class, 'id_movie', 'id_movie');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
+}
+```
+
+### 7. app/Models/LikeMovie.php
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class LikeMovie extends Model
+{
+    use HasFactory;
+
+    protected $table = 'like_movies';
+    protected $primaryKey = 'id_like_movies';
+    
+    protected $fillable = [
+        'id_movie',
+        'id_user',
+    ];
+
+    // Relationships
+    public function movie()
+    {
+        return $this->belongsTo(Movie::class, 'id_movie', 'id_movie');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
+}
+```
+
+### 8. app/Models/LikeKeyword.php
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class LikeKeyword extends Model
+{
+    use HasFactory;
+
+    protected $table = 'like_keywords';
+    protected $primaryKey = 'id_like_keywords';
+    
+    protected $fillable = [
+        'id_seo',
+        'id_user',
+    ];
+
+    // Relationships
+    public function keyword()
+    {
+        return $this->belongsTo(Keyword::class, 'id_seo', 'id_seo');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
+}
+```
+
+### 9. app/Models/LikeGenre.php
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class LikeGenre extends Model
+{
+    use HasFactory;
+
+    protected $table = 'like_genres';
+    protected $primaryKey = 'id_like_genres';
+    
+    protected $fillable = [
+        'id_category',
+        'id_user',
+    ];
+
+    // Relationships
+    public function genre()
+    {
+        return $this->belongsTo(Genre::class, 'id_category', 'id_category');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
+}
+```
+
+## Final Step
+After creating all files, run:
+```bash
+php artisan migrate
+```

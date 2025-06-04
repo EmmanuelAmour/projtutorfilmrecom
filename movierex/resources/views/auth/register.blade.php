@@ -19,12 +19,17 @@
                 @csrf
 
                 <div>
-                    <label for="username" class="block text-sm font-medium text-gray-300">Nom d'utilisateur</label>
+                    <label for="username" class="block text-sm font-medium text-gray-300">Username</label>
                     <input type="text" name="username" id="username" value="{{ old('username') }}" required
                         class="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white
                     focus:outline-none focus:ring-2 focus:ring-amber-400">
                 </div>
-
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-300">Full Name</label>
+                    <input type="text" name="username" id="username" value="{{ old('username') }}" required
+                        class="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white
+                    focus:outline-none focus:ring-2 focus:ring-amber-400">
+                </div>
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-300">Email</label>
                     <input type="email" name="email" id="email" value="{{ old('email') }}" required

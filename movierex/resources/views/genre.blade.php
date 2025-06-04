@@ -10,7 +10,7 @@
                     <span class="text-2xl font-medium text-amber-400">films</span>
 
                     <!-- Bouton Like -->
-                    <form method="POST" action="{{ route('genre.like', $genre) }}" class="ml-2">
+                    <form method="POST" action="{{ route('user.like.genre', ['id' => $id_genre]) }}" class="ml-2">
                         @csrf
                         <button type="submit" class="p-2 rounded-full bg-gray-800 hover:bg-amber-400 transition-colors">
                             <svg class="w-6 h-6 @if ($isLiked) fill-rose-400 stroke-rose-400 @else fill-transparent stroke-current @endif"
