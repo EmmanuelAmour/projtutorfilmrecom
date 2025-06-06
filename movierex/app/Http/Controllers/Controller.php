@@ -13,6 +13,7 @@ abstract class Controller
     protected $data;
     protected $apiKey;
     protected $login;
+    protected $adult;
     protected $responseController;
     public function __construct()
     {
@@ -41,5 +42,14 @@ abstract class Controller
 
     //adult
     public function get_session_adult() {}
-    public function set_session_adult() {}
+    public function set_session_adult()
+    {
+        $currentYear = Carbon::now()->year;
+        $adult = false;
+        if ($currentYear - $this->login->birth_date->year >= 18) {
+            $adult = true;
+        }
+        Session::put('adult', $adult);
+        $this->adult = $adult;
+    }
 }
