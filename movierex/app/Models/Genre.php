@@ -9,11 +9,12 @@ class Genre extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id_category';
+    protected $primaryKey = 'id_genre';
 
     protected $fillable = [
         'name',
         'description',
+        'id_genre_tmdb'
     ];
 
     // Relationships

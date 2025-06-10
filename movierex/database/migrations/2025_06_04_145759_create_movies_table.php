@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('movies', function (Blueprint $table) {
             $table->id('id_movie');
+            $table->bigInteger('id_movie_tmdb');
             $table->string('title');
             $table->date('published_at')->nullable();
             $table->timestamps();

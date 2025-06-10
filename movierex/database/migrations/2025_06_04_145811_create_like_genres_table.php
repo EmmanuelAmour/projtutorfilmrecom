@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('like_genres', function (Blueprint $table) {
-            $table->id('id_like_genres');
+            $table->id('id_like_genres')->autoIncrement();
             $table->unsignedBigInteger('id_genre');
             $table->unsignedBigInteger('id_user');
             $table->timestamps();

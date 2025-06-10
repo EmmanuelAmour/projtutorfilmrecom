@@ -12,7 +12,7 @@
         integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM8d7xj1z5l5e5e5e5e5e5e5e5e5e5e5e5e5" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/cards.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
-
+    @yield('styles')
     <style>
         .movie-carousel::-webkit-scrollbar {
             height: 8px;
@@ -31,7 +31,7 @@
     </style>
 </head>
 
-<body class="bg-white-900 ">
+<body style="background-color: rgb(17, 24, 39);">
     <!-- Logo vectoriel SVG -->
     <x-header />
     <main class="container mx-auto px-4 py-8 space-y-12">
@@ -53,6 +53,8 @@
             });
         });
     </script>
+    @yield('scripts')
+
 </body>
 
 </html>

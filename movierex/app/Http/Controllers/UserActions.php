@@ -4,71 +4,113 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\LikeGenre;
+use App\Models\LikeMovie;
+use App\Models\Movie;
 use App\Models\Genre;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 
-class UserActions extends Controller
+class UserActions extends defaultController
 {
     protected $responseController;
 
     public function __construct()
     {
-        //$this->data = new data();
-        //$this->apiKey = env('TMDB_API_KEY');
-        //$login = Session::get('login');
-
-        $this->responseController = new responseController($adult);
+        parent::__construct();
+        $this->set_session_adult();
+        $this->responseController = new responseController($this->get_session_adult());
     }
     public function likeGenre($genreId)
     {
         $userId = Auth::id();
-
-        $genre = Genre::find($genreId);
+        $genre = Genre::where('id_genre_tmdb', '=', $genreId)->first();
         if (!$genre) {
             $genreResponse = $this->responseController->make_request(
                 ['link' => 'https://api.themoviedb.org/3/genre/movie/list'],
-                [
-                    'api_key' => $this->apiKey
-                ]
+                []
             );
-            Genre::create([
-                'id_genre' => $genreId,
-                'name' => ''
-            ]);
+            if ($genreResponse->successful()) {
+                $genreData = $genreResponse->json();
+                if (isset($genreData['genres'])) {
+                    foreach ($genreData['genres'] as $g) {
+                        if ($g['id'] == $genreId) {
+                            $genre = Genre::create([
+                                'id_genre_tmdb' => $g['id'],
+                                'name' => $g['name']
+                            ]);
+                            break;
+                        }
+                    }
+                }
+            } else {
+                return response()->json(['error' => 'Failed to fetch genre information'], 500);
+            }
         }
-        // Check if the user has already liked this genre
+        if (!$genre) {
+            return response()->json(['error' => 'Genre not found after API attempt'], 404);
+        }
         $existingLike = LikeGenre::where('id_user', $userId)
-            ->where('id_genre', $genreId)
-            ->first();
+            ->where('id_genre', $genre->id_genre)->first();
         if (!$existingLike) {
-            // Create new like
             LikeGenre::create([
                 'id_user' => $userId,
-                'id_genre' => $genreId
+                'id_genre' => $genre->id_genre
             ]);
-            dd($userId);
             return back()->with('success', 'Genre liked successfully');
         }
-
         return response()->json(['message' => 'Genre already liked']);
     }
-
     public function unlikeGenre($genreId)
     {
         $userId = Auth::id();
-
-        // Find and delete the like
         $like = LikeGenre::where('id_user', $userId)
-            ->where('genre_id', $genreId)
-            ->first();
-
+            ->where('id_genre', $genreId)->first();
         if ($like) {
             $like->delete();
             return response()->json(['message' => 'Genre unliked successfully']);
         }
-
         return response()->json(['message' => 'Genre was not liked']);
+    }
+    //MOVIES
+
+
+    public function likeMovie($movieId)
+    {
+        $userId = Auth::id();
+        $movie = Movie::where('id_movie_tmdb', '=', $movieId)->first();
+        $existingLike = LikeMovie::where('id_user', $userId)
+            ->where('id_movie', $movie->id_movie)
+            ->first();
+        if ($existingLike) {
+            return response()->json(['message' => 'Movie already liked'], 409);
+        } else {
+            LikeMovie::create([
+                'id_user' => $userId,
+                'id_movie' => $movie->id_movie
+            ]);
+            return back()->with('success', 'Genre liked successfully');
+        }
+    }
+
+    public function unlikeMovie($movieId)
+    {
+        $userId = Auth::id();
+        $movie = Movie::where('id_movie_tmdb', '=', $movieId)->first();
+
+        if (!$movie) {
+            return response()->json(['error' => 'Movie not found'], 404);
+        }
+
+        $like = LikeMovie::where('id_user', $userId)
+            ->where('id_movie', $movie->id_movie)
+            ->first();
+
+        if (!$like) {
+            return response()->json(['error' => 'Like not found'], 404);
+        }
+
+        $like->delete();
+        return response()->json(['message' => 'Movie unliked successfully']);
     }
 }

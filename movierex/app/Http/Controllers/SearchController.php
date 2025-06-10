@@ -3,7 +3,7 @@
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\defaultController;
 use App\Http\Controllers\data;
 
 use Illuminate\Support\Facades\DB;
@@ -19,16 +19,13 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
-class SearchController extends Controller
+class SearchController extends defaultController
 {
-    protected $data;
-    protected $apiKey;
 
 
     public function __construct()
     {
-        $this->data = new data();
-        $this->apiKey = env('TMDB_API_KEY');
+        parent::__construct();
     }
     public function search(Request $request)
     {

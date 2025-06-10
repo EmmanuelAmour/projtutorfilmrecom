@@ -62,5 +62,5 @@
             }
         </style>
     </section>
-    <x-pagination :currentPage="$page" :totalPages="$total_pages" :query="$genre" />
+    <x-pagination :currentPage="$page" :totalPages="$total_pages" :genre="$genre" />
 @endsection

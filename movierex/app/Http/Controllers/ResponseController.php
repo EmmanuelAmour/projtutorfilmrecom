@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Http;
 class ResponseController extends Controller
 {
     protected $apiKey;
+    protected $login;
+    protected $adult;
     protected $response;
     protected $link;
     protected $certification;

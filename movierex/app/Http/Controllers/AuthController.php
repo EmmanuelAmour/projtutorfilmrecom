@@ -12,7 +12,7 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
 
-class AuthController extends Controller
+class AuthController extends defaultController
 {
     public function showLoginForm()
     {
@@ -29,7 +29,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             $login = User::where('email', $request->email)->first();
-            Session::put('login', $login);
+            $this->set_session_login($login);
             return redirect()->intended('/');
         }
 
@@ -78,7 +78,7 @@ class AuthController extends Controller
             'birth_date' => $request->birth_date,
             'password' => Hash::make($request->password),
         ]);
-        Session::put('login', $user);
+        $this->set_session_login($user);
         Auth::login($user);
 
         return redirect('/')->with('success', 'Compte créé avec succès!');

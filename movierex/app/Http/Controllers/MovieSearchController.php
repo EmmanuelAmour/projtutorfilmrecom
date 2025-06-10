@@ -8,8 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
-
-
+use App\Models\Genre;
+use App\Models\LikeGenre;
 
 class MovieSearchController extends MovieController
 {
@@ -52,14 +52,30 @@ class MovieSearchController extends MovieController
         if ($genreResponse->successful()) {
             $genres = $genreResponse->json()['genres'];
             $genreId = collect($genres)->firstWhere('name', ucfirst(strtolower($genre)))['id'] ?? null;
-
             if ($genreId) {
                 $response = $this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/discover/movie'], [
                     'api_key' => $this->apiKey,
                     'with_genres' => $genreId,
                     'page' => $page // Ajout du paramètre de pagination
                 ]);
+                //$this->get_session_login()->id_user;
+                $userId = $this->get_session_login()->id_user;
                 $this->data->set_all($response);
+                $genre_req = Genre::where('name', '=', $genre)->first();
+                if (!$genre_req) {
+                    $genre_req = Genre::create([
+                        'id_genre_tmdb' => $genreId,
+                        'name' => ucfirst(strtolower($genre))
+                    ]);
+                }
+                $existingLike = LikeGenre::where('id_user', $userId)
+                    ->where('id_genre', $genre_req->id_genre)
+                    ->first();
+                if ($existingLike) {
+                    $isLiked = true;
+                } else {
+                    $isLiked = false;
+                }
                 return view('genre', [
                     'movies' => $this->data->getMovies(),
                     'page' => $this->data->getPage(),
@@ -67,7 +83,7 @@ class MovieSearchController extends MovieController
                     'total_results' => $this->data->getTotalResults(),
                     'genre' => $genre,
                     'id_genre' => $genreId,
-                    'isLiked' => false
+                    'isLiked' => $isLiked
                 ]);
             }
         }

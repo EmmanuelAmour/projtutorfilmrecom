@@ -12,11 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('genres', function (Blueprint $table) {
-            $table->id('id_genre');
+            $table->id('id_genre')->autoIncrement();
+            $table->bigInteger('id_genre_tmdb');
             $table->string('name');
             $table->text('description')->nullable();
             $table->timestamps();
-        });;
+        });
     }
 
     /**

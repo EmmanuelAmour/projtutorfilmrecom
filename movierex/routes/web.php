@@ -28,8 +28,7 @@ Route::group(['prefix' => ''], function () {
     Route::get('/movie/{id}/account/states', [MovieController::class, 'accountStates']);
 
 
-    include __DIR__ . '/search.php';
-    include __DIR__ . '/user.php';
+
 
 
 
@@ -40,6 +39,10 @@ Route::group(['prefix' => ''], function () {
 
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+
+    include __DIR__ . '/search.php';
+    include __DIR__ . '/user.php';
+    include __DIR__ . '/prepare.php';
 
     //Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
 });

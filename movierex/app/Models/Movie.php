@@ -12,9 +12,8 @@ class Movie extends Model
     protected $primaryKey = 'id_movie';
 
     protected $fillable = [
+        'id_movie_tmdb',
         'title',
-        'intro',
-        'outro',
         'image',
         'published_at',
     ];

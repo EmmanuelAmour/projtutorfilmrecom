@@ -5,14 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
-class UserController extends Controller
+class UserController extends defaultController
 {
-    private $apiKey;
     private $tmdbBase = 'https://api.themoviedb.org/3/';
 
     public function __construct()
     {
-        $this->apiKey = env('TMDB_API_KEY');
+        parent::__construct();
     }
 
     public function fetchMovies(Request $request)
@@ -26,7 +25,7 @@ class UserController extends Controller
 
     public function getHorrorMovies()
     {
-        return Http::get($this->tmdbBase.'discover/movie', [
+        return Http::get($this->tmdbBase . 'discover/movie', [
             'api_key' => $this->apiKey,
             'with_genres' => 27,
             'sort_by' => 'popularity.desc',
@@ -36,12 +35,12 @@ class UserController extends Controller
 
     public function getWesternMovies()
     {
-        $keywordId = Http::get($this->tmdbBase.'search/keyword', [
+        $keywordId = Http::get($this->tmdbBase . 'search/keyword', [
             'api_key' => $this->apiKey,
             'query' => 'western'
         ])->json()['results'][0]['id'] ?? null;
 
-        return $keywordId ? Http::get($this->tmdbBase.'discover/movie', [
+        return $keywordId ? Http::get($this->tmdbBase . 'discover/movie', [
             'api_key' => $this->apiKey,
             'with_keywords' => $keywordId,
             'sort_by' => 'release_date.desc',
@@ -51,7 +50,7 @@ class UserController extends Controller
 
     public function getPopularMovies()
     {
-        return Http::get($this->tmdbBase.'movie/popular', [
+        return Http::get($this->tmdbBase . 'movie/popular', [
             'api_key' => $this->apiKey,
             //'region' => 'FR',
             //'language' => 'fr-FR',
@@ -59,7 +58,8 @@ class UserController extends Controller
         ])->json()['results'] ?? [];
     }
 
-    public function like_genre(){
+    public function like_genre()
+    {
         //$user = Session::get('user')  
     }
 }

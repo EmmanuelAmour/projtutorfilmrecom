@@ -13,7 +13,7 @@ Route::prefix('user')->group(function () {
     Route::delete('/genre/{id}/unlike', [UserController::class, 'unlike_genre'])->name('user.unlike.genre');
 
     // Movie management
-    Route::post('/movie/{movie}/like', [UserController::class, 'like_movie'])->name('user.like.movie');
+    Route::post('/movie/{movieId}/like', [UserActions::class, 'likeMovie'])->name('user.like.movie');
     Route::delete('/movie/{movie}/unlike', [UserController::class, 'unlike_movie'])->name('user.unlike.movie');
     Route::post('/movie/{movie}/rate', [UserController::class, 'rate_movie'])->name('movie.rate');
     Route::delete('/movie/{movie}/unrate', [UserController::class, 'unrate_movie'])->name('movie.unrate');

@@ -7,23 +7,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 
-class HomeController extends Controller
+class HomeController extends defaultController
 {
-    public $userController ;
-    protected $data;
+    public $userController;
     protected $apiKey;
 
 
     public function __construct()
     {
-        $this->data = new data();
-        $this->apiKey = env('TMDB_API_KEY');
-        //$this->userController = UserController::class;
+        parent::__construct();
         $this->userController = new UserController();
-
     }
 
-    public function index(){
+    public function index()
+    {
         $response = Http::get("https://api.themoviedb.org/3/movie/popular?api_key={$this->apiKey}");
 
         if ($response->successful()) {
@@ -36,13 +33,8 @@ class HomeController extends Controller
                 'horror_movies' => $this->userController->getPopularMovies(),
                 'pageTitle' => 'Welcome to MovieRex'
             ]);
-
         }
 
         return abort(404);
     }
-
-
-
-
 }

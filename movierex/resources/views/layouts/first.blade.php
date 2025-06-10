@@ -12,7 +12,7 @@
         integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM8d7xj1z5l5e5e5e5e5e5e5e5e5e5e5e5e5" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/cards.css') }}">
     <script src="https://cdn.tailwindcss.com"></script>
-
+    @yield('styles')
     <style>
         .movie-carousel::-webkit-scrollbar {
             height: 8px;
@@ -53,6 +53,8 @@
             });
         });
     </script>
+    @yield('scripts')
+
 </body>
 
 </html>

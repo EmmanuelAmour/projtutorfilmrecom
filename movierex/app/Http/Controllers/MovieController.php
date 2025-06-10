@@ -6,8 +6,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
+use App\Models\Movie;
+use App\Models\Keyword;
+use App\Models\Genre;
+use App\Models\MovieKeyword;
+use Illuminate\Support\Facades\Auth;
 
-class MovieController extends Controller
+
+class MovieController extends defaultController
 {
     private $keywords = [];
     protected $data;
@@ -15,15 +21,10 @@ class MovieController extends Controller
     protected $responseController;
     public function __construct()
     {
-        $this->data = new data();
-        $this->apiKey = env('TMDB_API_KEY');
-        $login = Session::get('login');
-        $currentYear = Carbon::now()->year;
-        $adult = false;
-        if ($currentYear - $login->birth_date->year >= 18) {
-            $adult = true;
-        }
-        $this->responseController = new responseController($adult);
+        parent::__construct();
+        $this->get_session_login();
+        $this->set_session_adult();
+        $this->responseController = new responseController($this->get_session_adult());
     }
 
 
@@ -31,24 +32,21 @@ class MovieController extends Controller
     {
         return view('welcome');
     }
-    public function set_keywords($id)
-    {
-        $response_keywords = Http::get("https://api.themoviedb.org/3/movie/{$id}/keywords?api_key={$this->apiKey}");
-        if ($response_keywords->successful()) {
-            $keywordsData = $response_keywords->json();
-            $this->keywords = $keywordsData['keywords'] ?? [];
-        }
-        return $this->keywords;
-    }
+
     public function show($id)
     {
-        $response = Http::get("https://api.themoviedb.org/3/movie/{$id}?api_key={$this->apiKey}");
+        $userId = Auth::id();
+        $movie = $this->get_movie($id);
+        $isLiked = false;
+        $isLiked = $this->is_movie_liked($id, $userId);
         $keywords = $this->set_keywords($id);
-        if ($response->successful()) {
-            $movie = $response->json();
-            return view('movie', compact('movie', 'keywords'));
-        }
-        return abort(404);
+
+        return view('movie', [
+            'movie' => $movie,
+            'keywords' => $keywords,
+            'isLiked' => $isLiked,
+
+        ]);
     }
 
     public function recommendations($movie_id)
