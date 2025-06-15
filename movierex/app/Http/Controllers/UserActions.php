@@ -111,6 +111,6 @@ class UserActions extends defaultController
         }
 
         $like->delete();
-        return response()->json(['message' => 'Movie unliked successfully']);
+        return back()->with('success', 'Genre liked successfully');
     }
 }

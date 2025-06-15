@@ -14,13 +14,13 @@ Route::prefix('user')->group(function () {
 
     // Movie management
     Route::post('/movie/{movieId}/like', [UserActions::class, 'likeMovie'])->name('user.like.movie');
-    Route::delete('/movie/{movie}/unlike', [UserController::class, 'unlike_movie'])->name('user.unlike.movie');
-    Route::post('/movie/{movie}/rate', [UserController::class, 'rate_movie'])->name('movie.rate');
-    Route::delete('/movie/{movie}/unrate', [UserController::class, 'unrate_movie'])->name('movie.unrate');
+    Route::delete('/movie/{movieId}/unlike', [UserActions::class, 'unlikeMovie'])->name('user.unlike.movie');
+    Route::post('/movie/{movie}/rate', [UserActions::class, 'rate_movie'])->name('movie.rate');
+    Route::delete('/movie/{movie}/unrate', [UserActions::class, 'unrate_movie'])->name('movie.unrate');
 
     // Keyword management
-    Route::post('/keyword/{keyword}/like', [UserController::class, 'like_keyword'])->name('user.like.keyword');
-    Route::delete('/keyword/{keyword}/unlike', [UserController::class, 'unlike_keyword'])->name('user.unlike.keyword');
+    Route::post('/keyword/{keyword}/like', [UserActions::class, 'like_keyword'])->name('user.like.keyword');
+    Route::delete('/keyword/{keyword}/unlike', [UserActions::class, 'unlike_keyword'])->name('user.unlike.keyword');
 
     // Watchlist management
     Route::get('/watchlist', [UserController::class, 'watchlist'])->name('watchlist.index');
