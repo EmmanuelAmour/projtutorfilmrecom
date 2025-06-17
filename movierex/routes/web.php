@@ -15,7 +15,7 @@ Route::group(['prefix' => ''], function () {
     Route::get('/trending', [MovieController::class, 'trending']);
     Route::get('/upcoming', [MovieController::class, 'upcoming']);
     // Movie routes
-    Route::get('/movie/{id}', [MovieController::class, 'show']);
+    Route::get('/movie/{id}', [MovieController::class, 'show'])->name('movie.show');
     Route::get('/movie/{id}/similar', [MovieController::class, 'similar']);
     Route::get('/movie/{id}/credits', [MovieController::class, 'credits']);
     Route::get('/movie/{id}/reviews', [MovieController::class, 'reviews']);

@@ -63,12 +63,16 @@ class UserActions extends defaultController
     }
     public function unlikeGenre($genreId)
     {
+        $genre = Genre::where('id_genre_tmdb', '=', $genreId)->first();
+        if (!$genre) {
+            return response()->json(['error' => 'Genre not found'], 404);
+        }
         $userId = Auth::id();
         $like = LikeGenre::where('id_user', $userId)
-            ->where('id_genre', $genreId)->first();
+            ->where('id_genre', $genre->id_genre)->first();
         if ($like) {
             $like->delete();
-            return response()->json(['message' => 'Genre unliked successfully']);
+            return back()->with('success', 'Genre liked successfully');
         }
         return response()->json(['message' => 'Genre was not liked']);
     }

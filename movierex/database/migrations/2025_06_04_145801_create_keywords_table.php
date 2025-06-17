@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('keywords', function (Blueprint $table) {
             $table->id('id_keyword');
             $table->string('name');
+            $table->bigInteger('id_keyword_tmdb');
             $table->string('meta_keywords')->nullable();
             $table->timestamps();
         });

@@ -111,30 +111,36 @@ class MovieController extends defaultController
 
     public function byKeyword($keyword)
     {
-        // NOTE: The current functionality doesn't filter by keyword, it just shows popular movies.
-        // To properly filter by keyword, you would need a different API call.
-
-        $response = $this->responseController->make_request(
-            ['link' => 'https://api.themoviedb.org/3/search/keyword'],
-            [
-                'query' => $keyword,
-            ]
-        );
-        if ($response->successful()) {
-            $keywordData = $response->json();
-            $keywordId = $keywordData['results'][0]['id'] ?? null;
-            if ($keywordId) {
-                $moviesResponse = $this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/discover/movie'], [
-                    'with_keywords' => $keywordId,
-                ]);
-                if ($moviesResponse->successful()) {
-                    $this->data->prepareMovies($moviesResponse->json()['results'] ?? []);
-                    $movies = $this->data->getMovies();
-                    // Return the view with the movies, but you may need to adjust the view to handle the keyword searc
-                    return view('popular', compact('movies'));
-                }
-            }
+        $userId = Auth::id();
+        $keyword_req = $this->get_keyword($keyword);
+        $keywordId = $keyword_req->id_keyword_tmdb;
+        $moviesResponse = $this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/discover/movie'], [
+            'with_keywords' => $keywordId,
+        ]);
+        if ($moviesResponse->successful()) {
+            $this->data->prepareMovies($moviesResponse->json()['results'] ?? []);
+            $movies = $this->data->getMovies();
+            // Return the view with the movies, but you may need to adjust the view to handle the keyword searc
+            $existingLike = true;
+            $existingLike = $this->is_keyword_liked($keyword_req->id_keyword, $userId);
+            //dd($keyword_req);
+            dd($existingLike);
+            return view(
+                'keyword',
+                [
+                    'movies' => $movies,
+                    'keyword' => $keyword,
+                    'id_keyword' => $keywordId,
+                    'pageTitle' => $keyword . " keyword",
+                    'page' => $this->data->getPage(),
+                    'total_pages' => $this->data->getTotalPages(),
+                    'total_results' => $this->data->getTotalResults(),
+                    'isLiked' => $existingLike,
+                ]
+            );
         }
+
+
         return abort(404);
     }
 }

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 use App\Models\Genre;
+use App\Models\Keyword;
+use App\Models\LikeKeyword;
 use App\Models\LikeMovie;
 use App\Models\Movie;
 use Illuminate\Support\Facades\Auth;
@@ -30,11 +32,11 @@ class defaultController extends Controller
         $this->apiKey = env('TMDB_API_KEY');
         $this->set_session_login(Session::get('login', null));
         $this->set_session_adult();
-        $this->responseController = new responseController($this->get_session_adult());
+        $this->responseController = new responseController($this->set_session_adult());
     }
 
     //SESSION VARAIBLES 
-    // LOGIN
+    //SESSION VARAIBLES : LOGIN
     public function get_session_login()
     {
         return Session::get('login');
@@ -45,7 +47,7 @@ class defaultController extends Controller
         $this->login = $login;
         return $this->login;
     }
-    //adult
+    //SESSION VARAIBLES : ADULT
     public function get_session_adult()
     {
         return $this->adult;
@@ -76,6 +78,7 @@ class defaultController extends Controller
     //METHODS OF DATABASES
     //METHODS OF DATABASES
     //METHODS OF DATABASES
+    // METHODS OF DATABASES : KEYWORDS
     public function set_keywords($id)
     {
         $response_keywords = Http::get("https://api.themoviedb.org/3/movie/{$id}/keywords?api_key={$this->apiKey}");
@@ -85,6 +88,8 @@ class defaultController extends Controller
         }
         return $this->keywords;
     }
+    // METHODS OF DATABASES : GENRES
+
     public function add_genre($genreId)
     {
         $genre = Genre::where('id_genre_tmdb', '=', $genreId)->first();
@@ -133,6 +138,15 @@ class defaultController extends Controller
         }
     }
 
+    // METHODS OF DATABASES : MOVIES
+    // 
+    /*
+    
+        The method returns the movie from the database if it exists, otherwise it creates it and returns it
+        the database doesn't store all of the movie's direct attributes,
+        it only stores the id, the title and the published_at date...
+        the method also returns the movie from the API if it exists, otherwise it returns null.
+    */
     public function get_movie($movieId)
     {
         $movie_database = Movie::where('id_movie_tmdb', '=', $movieId)->first();
@@ -162,6 +176,47 @@ class defaultController extends Controller
             $like = LikeMovie::where('id_movie', '=', $movie_database->id_movie)
                 ->where('id_user', '=', $userId)->first();
             //dump($like);
+            if ($like)
+                return true;
+            else
+                return false;
+        }
+    }
+
+    //KEYWORDS
+    public function get_keyword($keyword)
+    {
+
+        $keyword_database = Keyword::where('name', '=', $keyword)->first();
+        $keywordResponse  = $this->responseController->make_request(
+            ['link' => 'https://api.themoviedb.org/3/search/keyword'],
+            [
+                'query' => $keyword,
+            ]
+        );
+        $keyword_result = $keywordResponse->json();
+
+        if (!$keyword_database) {
+            if ($keywordResponse->successful()) {
+                $keyword = $keyword_result['results'][0];
+                $keyword_database = Keyword::create([
+                    'id_keyword_tmdb' => $keyword['id'],
+                    'name' => $keyword['name'],
+                ]);
+            } else {
+                return null;
+            }
+        }
+        return $keyword_database;
+    }
+    public function is_keyword_liked($id_keyword, $userId)
+    {
+        $keyword_database = Keyword::where('id_keyword', '=', $id_keyword)->first();
+        if ($keyword_database) {
+            $like = LikeKeyword::where('id_keyword', '=', $keyword_database->id_keyword)
+                ->where('id_user', '=', $userId)->first();
+            //dump($like);
+
             if ($like)
                 return true;
             else

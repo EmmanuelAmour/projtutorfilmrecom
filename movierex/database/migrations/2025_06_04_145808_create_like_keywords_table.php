@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+
         Schema::create('like_keywords', function (Blueprint $table) {
             $table->id('id_like_keywords');
             $table->unsignedBigInteger('id_keyword');

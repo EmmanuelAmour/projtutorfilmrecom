@@ -1,18 +1,18 @@
 @extends('layouts.default')
-@section('title', $genre)
+@section('title', $keyword)
 @section('content')
     <section class="mb-12">
         <!-- En-tête avec navigation -->
         <div class="flex justify-between items-start mb-8">
             <div class="flex flex-col">
                 <h1 class="text-4xl font-bold mb-2 flex items-center gap-3">
-                    {{ $genre }}
+                    {{ $keyword }}
                     <span class="text-2xl font-medium text-amber-400">films</span>
 
                     <!-- Bouton Like -->
                     @auth
                         @if ($isLiked)
-                            <form method="POST" action="{{ route('user.unlike.genre', ['id' => $id_genre]) }}" class="ml-2">
+                            <form method="POST" action="{{ route('user.unlike.keyword', ['id' => $id_keyword]) }}" class="ml-2">
                                 @csrf
                                 @method('DELETE') {{-- <== THIS is the key to making DELETE work --}}
                                 <button type="submit" class="p-2 rounded-full bg-gray-800 hover:bg-amber-400 transition-colors">
@@ -24,7 +24,8 @@
                                 </button>
                             </form>
                         @else
-                            <form method="POST" action="{{ route('user.like.genre', ['id' => $id_genre]) }}" class="ml-2">
+                            <form method="POST" action="{{ route('user.like.keyword', ['id' => $id_keyword]) }}"
+                                class="ml-2">
                                 @csrf
                                 <button type="submit"
                                     class="p-2 rounded-full bg-gray-800 hover:bg-amber-400 transition-colors">
@@ -38,13 +39,11 @@
                         @endif
                     @else
                     @endauth
-
-
                 </h1>
 
                 <!-- Compteur de films -->
                 <p class="text-lg text-gray-300">
-                    {{ number_format($total_results, 0, ',', ' ') }} of {{ $genre }} movies
+                    {{ number_format($total_results, 0, ',', ' ') }} of {{ $keyword }} movies
                 </p>
             </div>
 
@@ -83,5 +82,5 @@
             }
         </style>
     </section>
-    <x-pagination :currentPage="$page" :totalPages="$total_pages" :genre="$genre" />
+    <x-pagination :currentPage="$page" :totalPages="$total_pages" />
 @endsection

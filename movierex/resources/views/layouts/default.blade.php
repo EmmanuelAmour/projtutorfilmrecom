@@ -29,6 +29,7 @@
             box-shadow: 4px 4px 8px #0f1721, -4px -4px 8px #374151;
         }
     </style>
+    @yield('styles')
 </head>
 
 <body class="bg-white-900 ">
@@ -54,6 +55,7 @@
             });
         });
     </script>
+    @yield('scripts')
 </body>
 
 </html>

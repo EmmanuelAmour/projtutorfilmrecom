@@ -14,6 +14,7 @@ class Keyword extends Model
     protected $fillable = [
         'name',
         'meta_keywords',
+        'id_keyword_tmdb',
     ];
 
     // Relationships

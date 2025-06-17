@@ -100,6 +100,7 @@ class MovieSearchController extends MovieController
         $this->data->set_all($response);
         return view('movies', [
             'movies' => $this->data->getMovies(),
+            'pageTitle' => $keyword . ' Movies',
             'page' => $this->data->getPage(),
             'total_pages' => $this->data->getTotalPages(),
             'total_results' => $this->data->getTotalResults(),

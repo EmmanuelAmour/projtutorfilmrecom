@@ -10,7 +10,7 @@ use App\Http\Controllers\UserController;
 Route::prefix('user')->group(function () {
     // Specific search routes must come before the generic search route
     Route::post('/genre/{id}/like', [UserActions::class, 'likeGenre'])->name('user.like.genre');
-    Route::delete('/genre/{id}/unlike', [UserController::class, 'unlike_genre'])->name('user.unlike.genre');
+    Route::delete('/genre/{id}/unlike', [UserActions::class, 'unlikeGenre'])->name('user.unlike.genre');
 
     // Movie management
     Route::post('/movie/{movieId}/like', [UserActions::class, 'likeMovie'])->name('user.like.movie');
@@ -19,8 +19,8 @@ Route::prefix('user')->group(function () {
     Route::delete('/movie/{movie}/unrate', [UserActions::class, 'unrate_movie'])->name('movie.unrate');
 
     // Keyword management
-    Route::post('/keyword/{keyword}/like', [UserActions::class, 'like_keyword'])->name('user.like.keyword');
-    Route::delete('/keyword/{keyword}/unlike', [UserActions::class, 'unlike_keyword'])->name('user.unlike.keyword');
+    Route::post('/keyword/{id}/like', [UserActions::class, 'likeKeyword'])->name('user.like.keyword');
+    Route::delete('/keyword/{id}/unlike', [UserActions::class, 'unLikeKeyword'])->name('user.unlike.keyword');
 
     // Watchlist management
     Route::get('/watchlist', [UserController::class, 'watchlist'])->name('watchlist.index');
