@@ -70,7 +70,7 @@
                     </div>
                 </div>
 
-                <!-- Details -->
+                <!-- Watchlist -->
                 <div class="flex-grow space-y-6 text-gray-200">
                     <div class="space-y-4">
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -116,19 +116,71 @@
                                     <span>Login to Like</span>
                                 </a>
                             @endauth
-                        </div>
 
-                        <!-- Metadata -->
-                        <div class="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap text-gray-300">
-                            <div class="p-2 bg-gray-800 rounded-lg">{{ date('Y', strtotime($movie['release_date'])) }}</div>
-                            <div class="p-2 bg-gray-800 rounded-lg">{{ $movie['runtime'] }} min</div>
-                            @foreach ($movie['genres'] as $genre)
-                                <a href="{{ route('search.genre', ['genre' => $genre['name']]) }}"
-                                    class="p-2 bg-blue-800 rounded-lg hover:bg-blue-700 text-blue-100">
-                                    {{ $genre['name'] }}
-                                </a>
-                            @endforeach
+
+                            <!-- Watchlist -->
+
                         </div>
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+
+                            <div class="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap text-gray-300">
+                                <div class="p-2 bg-gray-800 rounded-lg">{{ date('Y', strtotime($movie['release_date'])) }}
+                                </div>
+                                <div class="p-2 bg-gray-800 rounded-lg">{{ $movie['runtime'] }} min</div>
+                                @foreach ($movie['genres'] as $genre)
+                                    <a href="{{ route('search.genre', ['genre' => $genre['name']]) }}"
+                                        class="p-2 bg-blue-800 rounded-lg hover:bg-blue-700 text-blue-100">
+                                        {{ $genre['name'] }}
+                                    </a>
+                                @endforeach
+                                <br>
+                            </div>
+                            <!-- Watchlist -->
+                            @auth
+                                @if ($isWatched)
+                                    <form method="POST" action="{{ route('watchlist.remove', ['movieId' => $movie['id']]) }}"
+                                        class="ml-2">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            class="flex items-center gap-2 px-4 py-2 rounded-2xl border border-amber-500 bg-amber-50 text-amber-600 font-semibold transition hover:bg-amber-100 hover:scale-105 shadow-sm">
+                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                                <path
+                                                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                            </svg>
+                                            <span>Remove from Watchlist</span>
+                                        </button>
+                                    </form>
+                                @else
+                                    <form method="POST" action="{{ route('watchlist.add', ['movieId' => $movie['id']]) }}"
+                                        class="ml-2">
+                                        @csrf
+                                        <button type="submit"
+                                            class="flex items-center gap-2 px-4 py-2 rounded-2xl bg-amber-500 text-white font-semibold transition hover:bg-amber-600 hover:scale-105 shadow-sm">
+                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                                <path
+                                                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                            </svg>
+                                            <span>Add to Watchlist</span>
+                                        </button>
+                                    </form>
+                                @endif
+                            @else
+                                <a href="{{ route('login') }}"
+                                    class="flex items-center gap-2 px-4 py-2 rounded-2xl bg-gray-600 text-white font-semibold transition hover:bg-gray-700 hover:scale-105 shadow-sm">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3 c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5 c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                                    </svg>
+                                    <span>Login to Add</span>
+                                </a>
+                            @endauth
+                            <!-- End of Watchlist -->
+                        </div>
+                        <!-- Metadata -->
+                    </div>
+                    <div class=" flex sapce-y-4">
+                        <div class="p-2 bg-gray-800 rounded-lg">⭐{{ $movie['vote_average'] }}/10</div>
                     </div>
 
                     <!-- Overview -->
@@ -136,7 +188,6 @@
                         <h2 class="text-2xl font-semibold">Overview</h2>
                         <p class="leading-relaxed text-lg max-w-3xl">{{ $movie['overview'] }}</p>
                     </div>
-
                     <!-- Production -->
                     <div class="space-y-4">
                         <h2 class="text-2xl font-semibold">Production Companies</h2>

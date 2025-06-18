@@ -12,7 +12,8 @@
                     <!-- Bouton Like -->
                     @auth
                         @if ($isLiked)
-                            <form method="POST" action="{{ route('user.unlike.keyword', ['id' => $id_keyword]) }}" class="ml-2">
+                            <form method="POST" action="{{ route('user.unlike.keyword', ['keywordId' => $id_keyword]) }}"
+                                class="ml-2">
                                 @csrf
                                 @method('DELETE') {{-- <== THIS is the key to making DELETE work --}}
                                 <button type="submit" class="p-2 rounded-full bg-gray-800 hover:bg-amber-400 transition-colors">
@@ -24,7 +25,7 @@
                                 </button>
                             </form>
                         @else
-                            <form method="POST" action="{{ route('user.like.keyword', ['id' => $id_keyword]) }}"
+                            <form method="POST" action="{{ route('user.like.keyword', ['keywordId' => $id_keyword]) }}"
                                 class="ml-2">
                                 @csrf
                                 <button type="submit"

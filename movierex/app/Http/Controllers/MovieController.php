@@ -39,12 +39,15 @@ class MovieController extends defaultController
         $movie = $this->get_movie($id);
         $isLiked = false;
         $isLiked = $this->is_movie_liked($id, $userId);
+        //$isWatched = null;
+        $isWatched = $this->is_movie_watched($id, $userId);
         $keywords = $this->set_keywords($id);
 
         return view('movie', [
             'movie' => $movie,
             'keywords' => $keywords,
             'isLiked' => $isLiked,
+            'isWatched' => $isWatched,
 
         ]);
     }
@@ -124,7 +127,7 @@ class MovieController extends defaultController
             $existingLike = true;
             $existingLike = $this->is_keyword_liked($keyword_req->id_keyword, $userId);
             //dd($keyword_req);
-            dd($existingLike);
+            //dd($existingLike);
             return view(
                 'keyword',
                 [

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\LikeKeyword;
 use Illuminate\Http\Request;
 use App\Models\LikeGenre;
 use App\Models\LikeMovie;
 use App\Models\Movie;
 use App\Models\Genre;
+use App\Models\Keyword;
+use App\Models\Watchlist;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -61,6 +64,7 @@ class UserActions extends defaultController
         }
         return response()->json(['message' => 'Genre already liked']);
     }
+    //------------------
     public function unlikeGenre($genreId)
     {
         $genre = Genre::where('id_genre_tmdb', '=', $genreId)->first();
@@ -76,9 +80,8 @@ class UserActions extends defaultController
         }
         return response()->json(['message' => 'Genre was not liked']);
     }
+    //===========================================================================
     //MOVIES
-
-
     public function likeMovie($movieId)
     {
         $userId = Auth::id();
@@ -115,6 +118,78 @@ class UserActions extends defaultController
         }
 
         $like->delete();
+        return back()->with('success', 'Genre liked successfully');
+    }
+
+    public function likeKeyword($keywordId)
+    {
+        $userId = Auth::id();
+        $keyword = Keyword::where('id_keyword_tmdb', '=', $keywordId)->first();
+        $existingLike =
+            LikeKeyword::where('id_user', $userId)
+            ->where('id_keyword', $keyword->id_keyword)
+            ->first();
+        if ($existingLike) {
+            return response()->json(['message' => 'Movie already liked'], 409);
+        } else {
+            LikeKeyword::create([
+                'id_user' => $userId,
+                'id_keyword' => $keyword->id_keyword
+            ]);
+            return back()->with('success', 'Genre liked successfully');
+        }
+    }
+
+    public function unLikeKeyword($keywordId)
+    {
+        $userId = Auth::id();
+        $keyword = Keyword::where('id_keyword_tmdb', '=', $keywordId)->first();
+        $existingLike =
+            LikeKeyword::where('id_user', $userId)
+            ->where('id_keyword', $keyword->id_keyword)
+            ->first();
+        if (!$existingLike) {
+            return response()->json(['error' => 'Like not found'], 404);
+        }
+        $existingLike->delete();
+        return back()->with('success', 'Genre liked successfully');
+    }
+
+    //Watchlist
+    public function add_to_watchlist($movieId)
+    {
+        $userId = Auth::id();
+        $movie = Movie::where('id_movie_tmdb', '=', $movieId)->first();
+        $existingLike = Watchlist::where('id_user', $userId)
+            ->where('id_movie', $movie->id_movie)
+            ->first();
+        if ($existingLike) {
+            return response()->json(['message' => 'Movie already liked'], 409);
+        } else {
+            Watchlist::create([
+                'id_user' => $userId,
+                'id_movie' => $movie->id_movie
+            ]);
+            return back()->with('success', 'Genre liked successfully');
+        }
+    }
+    public function remove_from_watchlist($movieId)
+    {
+        $userId = Auth::id();
+        $movie = Movie::where('id_movie_tmdb', '=', $movieId)->first();
+
+        if (!$movie) {
+            return response()->json(['error' => 'Movie not found'], 404);
+        }
+        $watched = Watchlist::where('id_user', $userId)
+            ->where('id_movie', $movie->id_movie)
+            ->first();
+
+        if (!$watched) {
+            return response()->json(['error' => 'Like not found'], 404);
+        }
+
+        $watched->delete();
         return back()->with('success', 'Genre liked successfully');
     }
 }

@@ -13,6 +13,8 @@ use App\Models\Keyword;
 use App\Models\LikeKeyword;
 use App\Models\LikeMovie;
 use App\Models\Movie;
+use App\Models\Watchlist;
+use Illuminate\Console\View\Components\Warn;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -218,6 +220,21 @@ class defaultController extends Controller
             //dump($like);
 
             if ($like)
+                return true;
+            else
+                return false;
+        }
+    }
+
+
+    public function is_movie_watched($id, $userId)
+    {
+        $movie_database = Movie::where('id_movie_tmdb', '=', $id)->first();
+        if ($movie_database) {
+            $isWatched = Watchlist::where('id_movie', '=', $movie_database->id_movie)
+                ->where('id_user', '=', $userId)->first();
+            //dump($like);
+            if ($isWatched)
                 return true;
             else
                 return false;
