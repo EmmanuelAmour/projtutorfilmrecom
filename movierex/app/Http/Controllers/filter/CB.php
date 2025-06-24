@@ -8,16 +8,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 use App\Http\Controllers\filter\Interests;
+use Illuminate\Support\Env;
 
-class CB extends defaultController
+class CB extends Controller
 {
+    private $apiKey;
     private $tmdbBase = 'https://api.themoviedb.org/3/';
     public $interests;
 
     public function __construct($id_user)
     {
-        parent::__construct();
         $this->interests = new Interests($id_user);
+        $this->apiKey = env('TMDB_API_KEY');
     }
 
 
@@ -71,7 +73,25 @@ class CB extends defaultController
         //dd($json);
         return [
             'name' => \App\Models\Movie::where('id_movie_tmdb', $lastmovie)->value('title'),
-            'results' => $json
+            'results' => $json,
+            'id' => $lastmovie
+        ];
+    }
+
+    public function rex_similar_movies($id_user, $id_movie_tmdb)
+    {
+        //$lastmovie = end($this->interests->liked_movies);
+        $json = Http::get($this->tmdbBase . "movie/{$id_movie_tmdb}/similar", [
+            'api_key' => $this->apiKey,
+            'sort_by' => 'popularity.desc',
+            //'vote_average.gte' => 6,
+            //'vote_count.gte' => 50,
+        ])->json()['results'] ?? [];
+        //dd($json);
+        return [
+            'name' => \App\Models\Movie::where('id_movie_tmdb', $id_movie_tmdb)->value('title'),
+            'results' => $json,
+            'id' => $id_movie_tmdb
         ];
     }
 }

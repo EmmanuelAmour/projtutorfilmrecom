@@ -119,7 +119,11 @@
         <div class="flex justify-between items-center mb-6">
             <div>
                 <h2 class="text-3xl font-bold mb-2">Because you liked :
-                    {{ $rex['rex_last_liked_movie_alone']['name'] }} </h2>
+
+                    <a href="{{ route('movie.show', ['id' => $rex['rex_last_liked_movie_alone']['id']]) }}">
+                        {{ $rex['rex_last_liked_movie_alone']['name'] }}
+                    </a>
+                </h2>
                 <p class="text-gray-400">The latest published film </p>
             </div>
             <button class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors">

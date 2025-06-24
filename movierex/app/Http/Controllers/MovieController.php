@@ -22,6 +22,7 @@ class MovieController extends defaultController
     public function __construct()
     {
         parent::__construct();
+        $this->apiKey = env('TMDB_API_KEY');
         $this->get_session_login();
         $this->set_session_adult();
         $this->responseController = new responseController($this->get_session_adult());
@@ -42,13 +43,14 @@ class MovieController extends defaultController
         //$isWatched = null;
         $isWatched = $this->is_movie_watched($id, $userId);
         $keywords = $this->set_keywords($id);
-
+        $rex_similar_movies = $this->cb->rex_similar_movies(Auth::id(), $movie['id']);
+        dump($rex_similar_movies);
         return view('movie', [
             'movie' => $movie,
             'keywords' => $keywords,
             'isLiked' => $isLiked,
             'isWatched' => $isWatched,
-            'rex_last_liked_movie_alone' => $this->cb->rex_last_liked_movie_alone(Auth::id()),
+            'rex_similar_movies' => $rex_similar_movies,
 
         ]);
     }
