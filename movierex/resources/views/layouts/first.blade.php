@@ -14,6 +14,35 @@
     <script src="https://cdn.tailwindcss.com"></script>
     @yield('styles')
     <style>
+        :root {
+            --primary-color: #f59e0b;
+            --primary-hover: #d97706;
+            --secondary-color: #6b7280;
+            --accent-color: #ef4444;
+            --background-dark: #0f172a;
+            --background-card: #1e293b;
+            --background-overlay: rgba(15, 23, 42, 0.8);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --gradient-primary: linear-gradient(135deg, #f59e0b, #ea580c);
+            --gradient-secondary: linear-gradient(135deg, #6366f1, #8b5cf6);
+            --gradient-default: linear-gradient(135deg, #374151, #1f2937);
+            --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 20px 40px -10px rgba(245, 158, 11, 0.2);
+            --border-radius: 16px;
+            --border-radius-lg: 24px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Global Styles */
+        body {
+            background: var(--background-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+        }
+
         .movie-carousel::-webkit-scrollbar {
             height: 8px;
             background: #1f2937;

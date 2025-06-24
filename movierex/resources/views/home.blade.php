@@ -1,93 +1,83 @@
 @extends('layouts.default')
 @section('title', 'Accueil')
 @section('content')
-    <!-- Hero Section with Featured Movie -->
-    <section class="relative mb-16 rounded-3xl overflow-hidden bg-gradient-to-r from-gray-900 via-gray-800 to-amber-900">
+    <!-- Enhanced Hero Section with Featured Movie -->
+    <section class="hero-section">
         @if (isset($featured_movie))
-            <div class="absolute inset-0">
+            <div class="hero-background">
                 <img src="https://image.tmdb.org/t/p/w1920/{{ $featured_movie['backdrop_path'] }}"
-                    alt="{{ $featured_movie['title'] }}" class="w-full h-full object-cover opacity-30">
-                <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent"></div>
+                    alt="{{ $featured_movie['title'] }}" class="hero-image">
+                <div class="hero-overlay"></div>
             </div>
         @endif
 
-        <div class="relative z-10 px-8 py-16 md:py-24">
-            <div class="max-w-4xl">
-                <div class="flex items-center space-x-2 mb-6">
-                    <span class="px-3 py-1 bg-amber-400 text-gray-900 text-sm font-semibold rounded-full">
-                        🎬 Film of the day
+        <div class="hero-content">
+            <div class="hero-container">
+                <div class="hero-badges">
+                    <span class="badge badge-primary">
+                        <i class="fas fa-sparkles"></i>
+                        Film of the day
                     </span>
-                    <span class="px-3 py-1 bg-red-600 text-white text-sm font-semibold rounded-full">
+                    <span class="badge badge-trending">
+                        <i class="fas fa-fire"></i>
                         Trending #1
                     </span>
                 </div>
 
-                <h1
-                    class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-amber-300 bg-clip-text text-transparent">
-                    Explore the Cinema
-                </h1>
+                <h1 class="hero-title">Explore the Cinema</h1>
 
                 @if (isset($featured_movie))
-                    <div class="mb-8">
-                        <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">{{ $featured_movie['title'] }}</h2>
-                        <p class="text-gray-300 text-lg mb-6 max-w-2xl">{{ Str::limit($featured_movie['overview'], 150) }}
-                        </p>
+                    <div class="hero-movie-info">
+                        <h2 class="movie-title">{{ $featured_movie['title'] }}</h2>
+                        <p class="movie-description">{{ Str::limit($featured_movie['overview'], 150) }}</p>
 
-                        <div class="flex items-center space-x-6 mb-8">
-                            <div class="flex items-center space-x-2">
-                                <i class="fas fa-star text-amber-400"></i>
-                                <span class="text-white font-semibold">{{ $featured_movie['vote_average'] }}/10</span>
+                        <div class="movie-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-star"></i>
+                                <span>{{ number_format($featured_movie['vote_average'], 1) }}/10</span>
                             </div>
-                            <div class="flex items-center space-x-2">
-                                <i class="fas fa-calendar text-amber-400"></i>
-                                <span class="text-white">{{ date('Y', strtotime($featured_movie['release_date'])) }}</span>
+                            <div class="meta-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>{{ date('Y', strtotime($featured_movie['release_date'])) }}</span>
                             </div>
-                            <div class="flex items-center space-x-2">
-                                <i class="fas fa-clock text-amber-400"></i>
-                                <span class="text-white">{{ $featured_movie['runtime'] ?? '120' }} min</span>
+                            <div class="meta-item">
+                                <i class="fas fa-clock"></i>
+                                <span>{{ $featured_movie['runtime'] ?? '120' }} min</span>
                             </div>
                         </div>
                     </div>
                 @endif
 
-                <div class="flex flex-wrap gap-4">
-                    <a href="{{ route('movie.show', ['id' => $featured_movie['id']]) }}">
-                        <button
-                            class="px-8 py-4 bg-amber-400 hover:bg-amber-500 text-gray-900 font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 flex items-center space-x-2">
-                            <i class="fas fa-play"></i>
-                            <span>View Details</span>
-                        </button>
+                <div class="hero-actions">
+                    <a href="{{ route('movie.show', ['id' => $featured_movie['id']]) }}" class="btn btn-primary">
+                        <i class="fas fa-play"></i>
+                        <span>View Details</span>
                     </a>
-                    <button
-                        class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl backdrop-blur-sm transition-all duration-300 flex items-center space-x-2">
+                    <button class="btn btn-secondary">
                         <i class="fas fa-plus"></i>
-                        <span>Ma liste</span>
+                        <span>My List</span>
                     </button>
-                    <button
-                        class="px-8 py-4 bg-white/10 hover:bg-white/20 text-white font-semibold rounded-xl backdrop-blur-sm transition-all duration-300 flex items-center space-x-2">
+                    <button class="btn btn-secondary">
                         <i class="fas fa-info-circle"></i>
-                        <span>Plus d'infos</span>
+                        <span>More Info</span>
                     </button>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Quick Search & Filters -->
-    <section class="mb-12">
-        <div class="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700">
-            <div class="flex flex-wrap items-center gap-4">
-                <div class="flex-1 min-w-64">
-                    <div class="relative">
-                        <input type="text" placeholder="Rechercher un film, acteur, réalisateur..."
-                            class="w-full px-4 py-3 pl-12 bg-gray-700 text-white rounded-xl border border-gray-600 focus:border-amber-400 focus:outline-none transition-colors">
-                        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    </div>
+    <!-- Enhanced Search & Filters -->
+    <section class="search-section ">
+        <div class="search-container">
+            <div class="search-form">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" placeholder="Search movies, actors, directors..." class="search-input"
+                        id="movieSearch">
                 </div>
 
-                <select
-                    class="px-4 py-3 bg-gray-700 text-white rounded-xl border border-gray-600 focus:border-amber-400 focus:outline-none">
-                    <option value="all">All of th genres</option>
+                <select class="filter-select" id="genreFilter">
+                    <option value="all">All Genres</option>
                     @php
                         $genres = App\Models\Genre::all();
                     @endphp
@@ -96,80 +86,68 @@
                     @endforeach
                 </select>
 
-                <select
-                    class="px-4 py-3 bg-gray-700 text-white rounded-xl border border-gray-600 focus:border-amber-400 focus:outline-none">
-                    <option>ALl of the years</option>
-
-                    <option>2024</option>
-                    <option>2023</option>
-                    <option>2022</option>
-                    <option>2021</option>
-                    <option>2020</option>
+                <select class="filter-select" id="yearFilter">
+                    <option value="all">All Years</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                    <option value="2020">2020</option>
                 </select>
 
-                <button
-                    class="px-6 py-3 bg-amber-400 hover:bg-amber-500 text-gray-900 font-semibold rounded-xl transition-colors">
-                    <i class="fas fa-filter mr-2"></i>Filtrer
+                <button class="btn btn-filter">
+                    <i class="fas fa-filter"></i>
+                    Filter
                 </button>
             </div>
         </div>
     </section>
 
-    <section class="mb-12">
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <h2 class="text-3xl font-bold mb-2">Because you liked :
-
-                    <a href="{{ route('movie.show', ['id' => $rex['rex_last_liked_movie_alone']['id']]) }}">
+    <!-- Because You Liked Section -->
+    <section class="recommendations-section">
+        <div class="section-header">
+            <div class="section-title-wrapper">
+                <h2 class="section-title">
+                    Because you liked:
+                    <a href="{{ route('movie.show', ['id' => $rex['rex_last_liked_movie_alone']['id']]) }}"
+                        class="highlight-link">
                         {{ $rex['rex_last_liked_movie_alone']['name'] }}
                     </a>
                 </h2>
-                <p class="text-gray-400">The latest published film </p>
+                <p class="section-subtitle">Personalized recommendations based on your preferences</p>
             </div>
-            <button class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors">
-                View all
-            </button>
+            <button class="btn btn-view-all">View All</button>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="movie-grid">
             @foreach (array_slice($rex['rex_last_liked_movie_alone']['results'], 0, 3) as $movie)
-                <div class="group bg-gray-800 rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300">
-                    <div class="flex">
-                        <div class="w-32 h-48 flex-shrink-0">
-                            <img src="https://image.tmdb.org/t/p/w500/{{ $movie['poster_path'] }}"
-                                alt="{{ $movie['title'] }}" class="w-full h-full object-cover">
+                <div class="movie-card horizontal-card">
+                    <div class="movie-poster">
+                        <img src="https://image.tmdb.org/t/p/w500/{{ $movie['poster_path'] }}" alt="{{ $movie['title'] }}"
+                            loading="lazy">
+                    </div>
+                    <div class="movie-info">
+                        <div class="movie-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-date">{{ date('d M', strtotime($movie['release_date'])) }}</span>
                         </div>
-                        <div class="flex-1 p-6">
-                            <div class="flex items-center space-x-2 mb-3">
-                                <span
-                                    class="px-2 py-1 bg-green-600 text-white text-xs font-semibold rounded-full">New</span>
-                                <span
-                                    class="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded-full">{{ date('d M', strtotime($movie['release_date'])) }}</span>
+
+                        <h3 class="movie-title-card">{{ $movie['title'] }}</h3>
+                        <p class="movie-overview">{{ Str::limit($movie['overview'], 120) }}</p>
+
+                        <div class="movie-footer">
+                            <div class="movie-rating">
+                                <i class="fas fa-star"></i>
+                                <span>{{ number_format($movie['vote_average'], 1) }}</span>
+                                <span class="year">{{ date('Y', strtotime($movie['release_date'])) }}</span>
                             </div>
-
-                            <h3 class="text-xl font-bold text-white mb-2 line-clamp-1">{{ $movie['title'] }}</h3>
-                            <p class="text-gray-400 text-sm mb-4 line-clamp-3">{{ Str::limit($movie['overview'], 120) }}
-                            </p>
-
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-4">
-                                    <div class="flex items-center space-x-1">
-                                        <i class="fas fa-star text-amber-400"></i>
-                                        <span class="text-white font-semibold">{{ $movie['vote_average'] }}</span>
-                                    </div>
-                                    <span class="text-gray-400">{{ date('Y', strtotime($movie['release_date'])) }}</span>
-                                </div>
-
-                                <div class="flex space-x-2">
-                                    <button
-                                        class="p-2 bg-amber-400 hover:bg-amber-500 text-gray-900 rounded-lg transition-colors">
-                                        <i class="fas fa-play text-sm"></i>
-                                    </button>
-                                    <button
-                                        class="p-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">
-                                        <i class="fas fa-plus text-sm"></i>
-                                    </button>
-                                </div>
+                            <div class="movie-actions">
+                                <button class="btn-icon btn-primary">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <button class="btn-icon btn-secondary">
+                                    <i class="fas fa-plus"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -178,87 +156,70 @@
         </div>
     </section>
 
-    <!-- Trending Now -->
-    <section class="mb-12">
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <h2 class="text-3xl font-bold mb-2">🔥 Current trending</h2>
-                <p class="text-gray-400">The trernding movies of this day</p>
+    <!-- Enhanced Trending Section -->
+    <section class="trending-section">
+        <div class="section-header">
+            <div class="section-title-wrapper">
+                <h2 class="section-title">
+                    <span class="emoji">🔥</span>
+                    Currently Trending
+                </h2>
+                <p class="section-subtitle">The hottest movies right now</p>
             </div>
-            <div class="flex space-x-2">
-                <button onclick="scrollCarousel('trending', -1)"
-                    class="p-3 rounded-full bg-gray-800 hover:bg-amber-400 hover:text-gray-900 transition-all duration-300">
+            <div class="carousel-controls">
+                <button class="carousel-btn" onclick="scrollCarousel('trending', -1)">
                     <i class="fas fa-chevron-left"></i>
                 </button>
-                <button onclick="scrollCarousel('trending', 1)"
-                    class="p-3 rounded-full bg-gray-800 hover:bg-amber-400 hover:text-gray-900 transition-all duration-300">
+                <button class="carousel-btn" onclick="scrollCarousel('trending', 1)">
                     <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
         </div>
 
-        <div id="trending-carousel" class="flex overflow-x-auto pb-4 gap-6 scroll-smooth scrollbar-hide">
+        <div id="trending-carousel" class="movie-carousel">
             @foreach ($popular_movies as $index => $movie)
-                <a href="{{ route('movie.show', ['id' => $movie['id']]) }}">
-                    <div class="w-80 flex-shrink-0">
-                        <div
-                            class="group relative bg-gray-800 rounded-2xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-                            <div class="relative h-96">
-                                <img src="https://image.tmdb.org/t/p/w500/{{ $movie['poster_path'] }}"
-                                    alt="{{ $movie['title'] }}" class="w-full h-full object-cover">
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                </div>
+                <a href="{{ route('movie.show', ['id' => $movie['id']]) }}" class="carousel-item">
+                    <div class="movie-card vertical-card">
+                        <div class="movie-poster-wrapper">
+                            <img src="https://image.tmdb.org/t/p/w500/{{ $movie['poster_path'] }}"
+                                alt="{{ $movie['title'] }}" class="movie-poster-vertical" loading="lazy">
 
-                                <!-- Trending Badge -->
-                                <div class="absolute top-4 left-4">
-                                    <span class="px-3 py-1 bg-red-600 text-white text-sm font-bold rounded-full">
-                                        #{{ $index + 1 }} Trending
-                                    </span>
-                                </div>
-
-                                <!-- Rating -->
-                                <div class="absolute top-4 right-4">
-                                    <div
-                                        class="bg-black/70 backdrop-blur-sm px-3 py-1 rounded-full flex items-center space-x-1">
-                                        <i class="fas fa-star text-amber-400 text-sm"></i>
-                                        <span class="text-white font-semibold text-sm">{{ $movie['vote_average'] }}</span>
-                                    </div>
-                                </div>
-
-                                <!-- Hover Actions -->
-                                <div
-                                    class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <div class="flex space-x-3">
-                                        <button
-                                            class="p-3 bg-amber-400 hover:bg-amber-500 text-gray-900 rounded-full transition-colors">
+                            <div class="movie-overlay">
+                                <div class="overlay-content">
+                                    <div class="movie-actions-overlay">
+                                        <button class="btn-icon btn-primary">
                                             <i class="fas fa-play"></i>
                                         </button>
-                                        <button
-                                            class="p-3 bg-white/20 hover:bg-white/30 text-white rounded-full backdrop-blur-sm transition-colors">
+                                        <button class="btn-icon btn-secondary">
                                             <i class="fas fa-plus"></i>
                                         </button>
-                                        <button
-                                            class="p-3 bg-white/20 hover:bg-white/30 text-white rounded-full backdrop-blur-sm transition-colors">
+                                        <button class="btn-icon btn-secondary">
                                             <i class="fas fa-heart"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="p-6">
-                                <h3 class="text-xl font-bold text-white mb-2 line-clamp-1">{{ $movie['title'] }}</h3>
-                                <p class="text-gray-400 text-sm mb-4 line-clamp-2">
-                                    {{ Str::limit($movie['overview'], 100) }}
-                                </p>
+                            <div class="movie-badges-overlay">
+                                <span class="badge badge-trending-number">
+                                    #{{ $index + 1 }} Trending
+                                </span>
+                                <div class="rating-badge">
+                                    <i class="fas fa-star"></i>
+                                    <span>{{ number_format($movie['vote_average'], 1) }}</span>
+                                </div>
+                            </div>
+                        </div>
 
-                                <div class="flex items-center justify-between">
-                                    <span
-                                        class="text-amber-400 font-semibold">{{ date('Y', strtotime($movie['release_date'])) }}</span>
-                                    <div class="flex items-center space-x-2">
-                                        <i class="fas fa-eye text-gray-400 text-sm"></i>
-                                        <span class="text-gray-400 text-sm">{{ rand(100, 999) }}K vues</span>
-                                    </div>
+                        <div class="movie-info-vertical">
+                            <h3 class="movie-title-vertical">{{ $movie['title'] }}</h3>
+                            <p class="movie-overview-vertical">{{ Str::limit($movie['overview'], 100) }}</p>
+
+                            <div class="movie-meta-vertical">
+                                <span class="movie-year">{{ date('Y', strtotime($movie['release_date'])) }}</span>
+                                <div class="movie-views">
+                                    <i class="fas fa-eye"></i>
+                                    <span>{{ rand(100, 999) }}K views</span>
                                 </div>
                             </div>
                         </div>
@@ -268,36 +229,33 @@
         </div>
     </section>
 
-    <!-- Personalized Recommendations -->
-    <section class="mb-12">
-        <div class="bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded-2xl p-8 border border-purple-500/20">
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <h2 class="text-3xl font-bold mb-2">🎯 Recommended for you</h2>
-                    <p class="text-gray-400">Based on your tastes and interests</p>
+    <!-- Enhanced Personalized Recommendations -->
+    <section class="personalized-section">
+        <div class="personalized-container">
+            <div class="section-header">
+                <div class="section-title-wrapper">
+                    <h2 class="section-title">
+                        <i class="fas fa-bullseye section-icon"></i>
+                        Recommended for You
+                    </h2>
+                    <p class="section-subtitle">Curated based on your viewing history and preferences</p>
                 </div>
-                <button
-                    class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl transition-colors">
-                    View all
-                </button>
+                <button class="btn btn-view-all">View All</button>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div class="recommendation-grid">
                 @foreach (array_slice($rex['rex_genres_alone'], 0, 6) as $movie)
-                    <div class="group relative">
-                        <div class="aspect-[2/3] rounded-xl overflow-hidden">
+                    <div class="recommendation-item">
+                        <div class="recommendation-poster">
                             <img src="https://image.tmdb.org/t/p/w500/{{ $movie['poster_path'] }}"
-                                alt="{{ $movie['title'] }}"
-                                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
-                            <div
-                                class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            </div>
-                            <div
-                                class="absolute bottom-0 left-0 right-0 p-3 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                                <h4 class="text-white font-semibold text-sm mb-1 line-clamp-2">{{ $movie['title'] }}</h4>
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas fa-star text-amber-400 text-xs"></i>
-                                    <span class="text-white text-xs">{{ $movie['vote_average'] }}</span>
+                                alt="{{ $movie['title'] }}" loading="lazy">
+                            <div class="recommendation-overlay">
+                                <div class="recommendation-info">
+                                    <h4 class="recommendation-title">{{ $movie['title'] }}</h4>
+                                    <div class="recommendation-rating">
+                                        <i class="fas fa-star"></i>
+                                        <span>{{ number_format($movie['vote_average'], 1) }}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -307,87 +265,74 @@
         </div>
     </section>
 
-    <!-- Genre Categories -->
-    <section class="mb-12">
-        <h2 class="text-3xl font-bold mb-8 text-center">Explore by genre</h2>
+    <!-- Enhanced Genre Categories -->
+    <section class="genres-section">
+        <h2 class="section-title centered">Explore by Genre</h2>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-12">
+        <div class="genres-grid">
             @php
-                $genres = App\Models\Genre::all();
+                $genreColors = [
+                    'Action' => 'from-red-600 to-red-800',
+                    'Comedy' => 'from-yellow-500 to-orange-600',
+                    'Drama' => 'from-blue-600 to-purple-700',
+                    'Horror' => 'from-gray-800 to-black',
+                    'Romance' => 'from-pink-500 to-rose-600',
+                    'Sci-Fi' => 'from-cyan-500 to-blue-600',
+                ];
             @endphp
             @foreach ($genres as $genre)
-                <a href="{{ route('search.genre', ['genre' => $genre->name]) }}" target="_blank"
-                    rel="noopener noreferrer">
-                    <div
-                        class="group relative aspect-square rounded-2xl overflow-hidden cursor-pointer 
-                        bg-gradient-to-br from-gray-800 to-gray-900 hover:from-amber-600 hover:to-amber-800 
-                        transition-all duration-300">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="text-center">
-                                <h3 class="text-white font-bold group-hover:text-gray-900 transition-colors">
-                                    {{ $genre->name }}
-                                </h3>
-                            </div>
-                        </div>
+                <a href="{{ route('search.genre', ['genre' => $genre->name]) }}" class="genre-card"
+                    style="background: linear-gradient(135deg, {{ $genreColors[$genre->name] ?? 'var(--gradient-default)' }})">
+                    <div class="genre-content">
+                        <h3 class="genre-name">{{ $genre->name }}</h3>
                     </div>
                 </a>
             @endforeach
         </div>
     </section>
 
-    <!-- Recently Added -->
-    <section class="mb-12">
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <h2 class="text-3xl font-bold mb-2">Because you are interested in movies about :
-                    {{ $rex['rex_last_keyword_alone']['name'] }} </h2>
-                <p class="text-gray-400">The latest published film </p>
+    <!-- Keyword-based Recommendations -->
+    <section class="recommendations-section">
+        <div class="section-header">
+            <div class="section-title-wrapper">
+                <h2 class="section-title">
+                    Because you're interested in:
+                    <span class="highlight-text">{{ $rex['rex_last_keyword_alone']['name'] }}</span>
+                </h2>
+                <p class="section-subtitle">Movies matching your interests</p>
             </div>
-            <button
-                class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl transition-colors">
-                View all
-            </button>
+            <button class="btn btn-view-all">View All</button>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="movie-grid">
             @foreach (array_slice($rex['rex_last_keyword_alone']['results'], 0, 3) as $movie)
-                <div class="group bg-gray-800 rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300">
-                    <div class="flex">
-                        <div class="w-32 h-48 flex-shrink-0">
-                            <img src="https://image.tmdb.org/t/p/w500/{{ $movie['poster_path'] }}"
-                                alt="{{ $movie['title'] }}" class="w-full h-full object-cover">
+                <div class="movie-card horizontal-card">
+                    <div class="movie-poster">
+                        <img src="https://image.tmdb.org/t/p/w500/{{ $movie['poster_path'] }}"
+                            alt="{{ $movie['title'] }}" loading="lazy">
+                    </div>
+                    <div class="movie-info">
+                        <div class="movie-badges">
+                            <span class="badge badge-new">New</span>
+                            <span class="badge badge-date">{{ date('d M', strtotime($movie['release_date'])) }}</span>
                         </div>
-                        <div class="flex-1 p-6">
-                            <div class="flex items-center space-x-2 mb-3">
-                                <span
-                                    class="px-2 py-1 bg-green-600 text-white text-xs font-semibold rounded-full">New</span>
-                                <span
-                                    class="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded-full">{{ date('d M', strtotime($movie['release_date'])) }}</span>
+
+                        <h3 class="movie-title-card">{{ $movie['title'] }}</h3>
+                        <p class="movie-overview">{{ Str::limit($movie['overview'], 120) }}</p>
+
+                        <div class="movie-footer">
+                            <div class="movie-rating">
+                                <i class="fas fa-star"></i>
+                                <span>{{ number_format($movie['vote_average'], 1) }}</span>
+                                <span class="year">{{ date('Y', strtotime($movie['release_date'])) }}</span>
                             </div>
-
-                            <h3 class="text-xl font-bold text-white mb-2 line-clamp-1">{{ $movie['title'] }}</h3>
-                            <p class="text-gray-400 text-sm mb-4 line-clamp-3">{{ Str::limit($movie['overview'], 120) }}
-                            </p>
-
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-4">
-                                    <div class="flex items-center space-x-1">
-                                        <i class="fas fa-star text-amber-400"></i>
-                                        <span class="text-white font-semibold">{{ $movie['vote_average'] }}</span>
-                                    </div>
-                                    <span class="text-gray-400">{{ date('Y', strtotime($movie['release_date'])) }}</span>
-                                </div>
-
-                                <div class="flex space-x-2">
-                                    <button
-                                        class="p-2 bg-amber-400 hover:bg-amber-500 text-gray-900 rounded-lg transition-colors">
-                                        <i class="fas fa-play text-sm"></i>
-                                    </button>
-                                    <button
-                                        class="p-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors">
-                                        <i class="fas fa-plus text-sm"></i>
-                                    </button>
-                                </div>
+                            <div class="movie-actions">
+                                <button class="btn-icon btn-primary">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <button class="btn-icon btn-secondary">
+                                    <i class="fas fa-plus"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -396,60 +341,49 @@
         </div>
     </section>
 
-    <!-- Top Rated Movies -->
-    <section class="mb-12">
-        <div class="flex justify-between items-center mb-6">
-            <div>
-                <h2 class="text-3xl font-bold mb-2">⭐ Les mieux notés</h2>
-                <p class="text-gray-400">Les films avec les meilleures critiques</p>
+    <!-- Enhanced Top Rated Movies -->
+    <section class="top-rated-section">
+        <div class="section-header">
+            <div class="section-title-wrapper">
+                <h2 class="section-title">⭐ Top Rated</h2>
+                <p class="section-subtitle">Movies with the highest ratings</p>
             </div>
-            <div class="flex space-x-2">
-                <button onclick="scrollCarousel('top-rated', -1)"
-                    class="p-3 rounded-full bg-gray-800 hover:bg-amber-400 hover:text-gray-900 transition-all duration-300">
+            <div class="carousel-controls">
+                <button class="carousel-btn" onclick="scrollCarousel('top-rated', -1)">
                     <i class="fas fa-chevron-left"></i>
                 </button>
-                <button onclick="scrollCarousel('top-rated', 1)"
-                    class="p-3 rounded-full bg-gray-800 hover:bg-amber-400 hover:text-gray-900 transition-all duration-300">
+                <button class="carousel-btn" onclick="scrollCarousel('top-rated', 1)">
                     <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
         </div>
 
-        <div id="top-rated-carousel" class="flex overflow-x-auto pb-4 gap-4 scroll-smooth scrollbar-hide">
+        <div id="top-rated-carousel" class="movie-carousel compact">
             @foreach ($popular_movies as $movie)
-                <div class="w-64 flex-shrink-0">
-                    <div
-                        class="group relative bg-gray-800 rounded-xl overflow-hidden transition-all duration-300 hover:scale-105">
-                        <div class="relative h-96">
+                <div class="carousel-item compact">
+                    <div class="movie-card compact-card">
+                        <div class="movie-poster-wrapper compact">
                             <img src="https://image.tmdb.org/t/p/w500/{{ $movie['poster_path'] }}"
-                                alt="{{ $movie['title'] }}" class="w-full h-full object-cover">
+                                alt="{{ $movie['title'] }}" class="movie-poster-compact" loading="lazy">
 
-                            <!-- Rating Badge -->
-                            <div class="absolute top-4 right-4">
-                                <div class="bg-amber-400 text-gray-900 px-3 py-1 rounded-full font-bold text-sm">
-                                    ⭐ {{ $movie['vote_average'] }}
-                                </div>
+                            <div class="rating-badge-top">
+                                ⭐ {{ number_format($movie['vote_average'], 1) }}
                             </div>
 
-                            <!-- Hover Overlay -->
-                            <div
-                                class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            </div>
-                            <div
-                                class="absolute bottom-4 left-4 right-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                                <h3 class="text-white font-bold mb-2 line-clamp-2">{{ $movie['title'] }}</h3>
-                                <div class="flex items-center justify-between">
-                                    <span
-                                        class="text-amber-400 text-sm">{{ date('Y', strtotime($movie['release_date'])) }}</span>
-                                    <div class="flex space-x-2">
-                                        <button
-                                            class="p-2 bg-amber-400 hover:bg-amber-500 text-gray-900 rounded-lg transition-colors">
-                                            <i class="fas fa-play text-sm"></i>
-                                        </button>
-                                        <button
-                                            class="p-2 bg-white/20 hover:bg-white/30 text-white rounded-lg backdrop-blur-sm transition-colors">
-                                            <i class="fas fa-heart text-sm"></i>
-                                        </button>
+                            <div class="movie-overlay compact">
+                                <div class="overlay-content compact">
+                                    <h3 class="movie-title-overlay">{{ $movie['title'] }}</h3>
+                                    <div class="movie-actions-compact">
+                                        <span
+                                            class="movie-year-overlay">{{ date('Y', strtotime($movie['release_date'])) }}</span>
+                                        <div class="actions-buttons">
+                                            <button class="btn-icon btn-primary small">
+                                                <i class="fas fa-play"></i>
+                                            </button>
+                                            <button class="btn-icon btn-secondary small">
+                                                <i class="fas fa-heart"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -460,88 +394,973 @@
         </div>
     </section>
 
-    <!-- Call to Action -->
-    <section class="mb-12">
-        <div class="bg-gradient-to-r from-amber-600 to-orange-600 rounded-3xl p-12 text-center">
-            <h2 class="text-4xl font-bold mb-4 text-gray-900">Rejoignez MovieRex Premium</h2>
-            <p class="text-gray-800 mb-8 max-w-2xl mx-auto text-lg">
-                Accédez à des milliers de films en haute qualité, sans publicité,
-                avec des recommandations personnalisées et du contenu exclusif.
-            </p>
-            <div class="flex flex-wrap justify-center gap-4">
-                <button
-                    class="px-8 py-4 bg-gray-900 hover:bg-gray-800 text-white font-semibold rounded-xl transition-colors">
-                    Essai gratuit 30 jours
-                </button>
-                <button
-                    class="px-8 py-4 bg-white/20 hover:bg-white/30 text-gray-900 font-semibold rounded-xl backdrop-blur-sm transition-colors">
-                    En savoir plus
-                </button>
+    <!-- Enhanced Premium CTA -->
+    <section class="premium-section">
+        <div class="premium-container">
+            <div class="premium-content">
+                <div class="premium-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h2 class="premium-title">Join MovieRex Premium</h2>
+                <p class="premium-description">
+                    Access thousands of high-quality movies, ad-free experience,
+                    personalized recommendations, and exclusive content.
+                </p>
+                <div class="premium-actions">
+                    <button class="btn btn-premium-primary">
+                        Start 30-Day Free Trial
+                    </button>
+                    <button class="btn btn-premium-secondary">
+                        Learn More
+                    </button>
+                </div>
             </div>
+            <div class="premium-background"></div>
         </div>
     </section>
 @endsection
 
 @section('styles')
     <style>
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
+        /* Modern CSS Variables */
 
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
 
-        .line-clamp-1 {
-            display: -webkit-box;
-            -webkit-line-clamp: 1;
-            -webkit-box-orient: vertical;
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            margin: 1rem;
+            border-radius: var(--border-radius-lg);
             overflow: hidden;
+            min-height: 70vh;
         }
 
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+        .hero-background {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right,
+                    rgba(0, 0, 0, 0.8) 0%,
+                    rgba(0, 0, 0, 0.5) 50%,
+                    transparent 100%),
+                linear-gradient(to top,
+                    rgba(0, 0, 0, 0.9) 0%,
+                    transparent 60%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            padding: 4rem 2rem;
+            display: flex;
+            align-items: center;
+            min-height: 70vh;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #ffffff, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-movie-info {
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        .movie-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .movie-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .movie-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+
+        .meta-item i {
+            color: var(--primary-color);
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        /* Enhanced Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: #000;
+            transform: translateY(0);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            padding: 0.75rem;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon.small {
+            padding: 0.5rem;
+        }
+
+        /* Enhanced Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background: var(--gradient-primary);
+            color: #000;
+        }
+
+        .badge-trending {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .badge-new {
+            background: #10b981;
+            color: white;
+        }
+
+        .badge-date {
+            background: var(--background-card);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Search Section */
+        .search-section {
+            margin: 3rem 1rem;
+        }
+
+        .search-container {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+        }
+
+        .search-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            background: rgba(55, 65, 81, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+
+        .filter-select {
+            padding: 0.75rem 1rem;
+            background: rgba(55, 65, 81, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            color: var(--text-primary);
+            min-width: 150px;
+        }
+
+        .btn-filter {
+            background: var(--gradient-primary);
+            color: #000;
+        }
+
+        /* Section Styles */
+        .recommendations-section,
+        .trending-section,
+        .personalized-section,
+        .genres-section,
+        .top-rated-section {
+            margin: 4rem 1rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title.centered {
+            text-align: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .section-icon {
+            color: var(--primary-color);
+        }
+
+        .highlight-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .highlight-link:hover {
+            color: var(--primary-hover);
+        }
+
+        .highlight-text {
+            color: var(--primary-color);
+        }
+
+        .btn-view-all {
+            background: #10b981;
+            color: white;
+            padding: 0.75rem 1.5rem;
+        }
+
+        .btn-view-all:hover {
+            background: #059669;
+        }
+
+        /* Movie Cards */
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .movie-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
             overflow: hidden;
+            transition: var(--transition);
+            position: relative;
         }
 
-        .line-clamp-3 {
+        .movie-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary-color);
+        }
+
+        .horizontal-card {
+            display: flex;
+        }
+
+        .movie-poster {
+            width: 8rem;
+            height: 12rem;
+            flex-shrink: 0;
+        }
+
+        .movie-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .movie-info {
+            flex: 1;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .movie-badges {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .movie-title-card {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .movie-card:hover .movie-title-card {
+            color: var(--primary-color);
+        }
+
+        .movie-overview {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            flex: 1;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
 
-        /* Smooth transitions for hover effects */
-        .group:hover .group-hover\:scale-105 {
-            transform: scale(1.05);
+        .movie-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .group:hover .group-hover\:scale-110 {
+        .movie-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .movie-rating i {
+            color: var(--primary-color);
+        }
+
+        .movie-rating .year {
+            color: var(--text-secondary);
+            margin-left: 0.5rem;
+        }
+
+        .movie-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Carousel Styles */
+        .carousel-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .carousel-btn {
+            padding: 0.75rem;
+            background: var(--background-card);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .carousel-btn:hover {
+            background: var(--primary-color);
+            color: #000;
             transform: scale(1.1);
         }
 
-        /* Custom gradient backgrounds */
-        .bg-gradient-to-br {
-            background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+        .movie-carousel {
+            display: flex;
+            overflow-x: auto;
+            gap: 1.5rem;
+            padding-bottom: 1rem;
+            scroll-behavior: smooth;
         }
 
-        /* Backdrop blur support */
-        .backdrop-blur-sm {
-            backdrop-filter: blur(4px);
+        .movie-carousel.compact {
+            gap: 1rem;
+        }
+
+        .carousel-item {
+            flex-shrink: 0;
+            width: 320px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .carousel-item.compact {
+            width: 256px;
+        }
+
+        .vertical-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .vertical-card:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .movie-poster-wrapper {
+            position: relative;
+            height: 24rem;
+        }
+
+        .movie-poster-wrapper.compact {
+            height: 20rem;
+        }
+
+        .movie-poster-vertical,
+        .movie-poster-compact {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .movie-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top,
+                    rgba(0, 0, 0, 0.9) 0%,
+                    transparent 60%);
+            opacity: 0;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .vertical-card:hover .movie-overlay {
+            opacity: 1;
+        }
+
+        .movie-actions-overlay {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .movie-badges-overlay {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            right: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .badge-trending-number {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .rating-badge,
+        .rating-badge-top {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 0.75rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .rating-badge-top {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary-color);
+            color: #000;
+        }
+
+        .movie-info-vertical {
+            padding: 1.5rem;
+        }
+
+        .movie-title-vertical {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .movie-overview-vertical {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .movie-meta-vertical {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .movie-year {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .movie-views {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Personalized Section */
+        .personalized-container {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1));
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .recommendation-item {
+            position: relative;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            aspect-ratio: 2/3;
+        }
+
+        .recommendation-poster {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .recommendation-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .recommendation-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .recommendation-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top,
+                    rgba(0, 0, 0, 0.8) 0%,
+                    transparent 60%);
+            opacity: 0;
+            transition: var(--transition);
+            display: flex;
+            align-items: flex-end;
+            padding: 1rem;
+        }
+
+        .recommendation-item:hover .recommendation-overlay {
+            opacity: 1;
+        }
+
+        .recommendation-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .recommendation-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+        }
+
+        /* Genre Grid */
+        .genres-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .genre-card {
+            aspect-ratio: 1;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: white;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .genre-card:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .genre-content {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+        }
+
+        .genre-name {
+            font-size: 1.125rem;
+            font-weight: 700;
+            transition: var(--transition);
+        }
+
+        .genre-card:hover .genre-name {
+            color: #000;
+        }
+
+        /* Premium Section */
+        .premium-section {
+            margin: 4rem 1rem;
+        }
+
+        .premium-container {
+            background: var(--gradient-primary);
+            border-radius: var(--border-radius-lg);
+            padding: 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .premium-background {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+        }
+
+        .premium-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .premium-icon {
+            font-size: 3rem;
+            color: #000;
+            margin-bottom: 1rem;
+        }
+
+        .premium-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 1rem;
+        }
+
+        .premium-description {
+            font-size: 1.125rem;
+            color: rgba(0, 0, 0, 0.8);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .premium-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn-premium-primary {
+            background: #000;
+            color: white;
+            padding: 1rem 2rem;
+        }
+
+        .btn-premium-primary:hover {
+            background: #1f2937;
+        }
+
+        .btn-premium-secondary {
+            background: rgba(0, 0, 0, 0.2);
+            color: #000;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            padding: 1rem 2rem;
+        }
+
+        .btn-premium-secondary:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Scrollbar Styles */
+        .movie-carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .movie-carousel {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 2rem 1rem;
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .movie-title {
+                font-size: 2rem;
+            }
+
+            .search-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-input-wrapper {
+                min-width: auto;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .movie-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .carousel-item {
+                width: 280px;
+            }
+
+            .recommendation-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .genres-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .premium-container {
+                padding: 2rem 1rem;
+            }
+
+            .premium-title {
+                font-size: 2rem;
+            }
+
+            .premium-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .movie-title {
+                font-size: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .carousel-item {
+                width: 240px;
+            }
+
+            .recommendation-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Animation Classes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Loading States */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
         }
     </style>
 @endsection
 
-
-
 @section('scripts')
-    <!-- JavaScript -->
     <script>
+        // Enhanced carousel functionality with smooth scrolling
         function scrollCarousel(carouselId, direction) {
             const carousel = document.getElementById(carouselId + '-carousel');
+            if (!carousel) return;
+
             const scrollAmount = carousel.offsetWidth * 0.8 * direction;
             carousel.scrollBy({
                 left: scrollAmount,
@@ -549,30 +1368,248 @@
             });
         }
 
-        // Auto-scroll for trending carousel
-        let autoScrollInterval;
+        // Auto-scroll functionality with pause on hover
+        class AutoScrollCarousel {
+            constructor(carouselId, interval = 5000) {
+                this.carousel = document.getElementById(carouselId + '-carousel');
+                this.interval = interval;
+                this.autoScrollTimer = null;
+                this.init();
+            }
 
-        function startAutoScroll() {
-            autoScrollInterval = setInterval(() => {
-                scrollCarousel('trending', 1);
-            }, 5000);
+            init() {
+                if (!this.carousel) return;
+
+                this.startAutoScroll();
+
+                // Pause on hover
+                this.carousel.addEventListener('mouseenter', () => this.stopAutoScroll());
+                this.carousel.addEventListener('mouseleave', () => this.startAutoScroll());
+
+                // Pause on focus (accessibility)
+                this.carousel.addEventListener('focusin', () => this.stopAutoScroll());
+                this.carousel.addEventListener('focusout', () => this.startAutoScroll());
+            }
+
+            startAutoScroll() {
+                this.stopAutoScroll();
+                this.autoScrollTimer = setInterval(() => {
+                    this.scrollNext();
+                }, this.interval);
+            }
+
+            stopAutoScroll() {
+                if (this.autoScrollTimer) {
+                    clearInterval(this.autoScrollTimer);
+                    this.autoScrollTimer = null;
+                }
+            }
+
+            scrollNext() {
+                const maxScroll = this.carousel.scrollWidth - this.carousel.clientWidth;
+                if (this.carousel.scrollLeft >= maxScroll) {
+                    // Reset to beginning
+                    this.carousel.scrollTo({
+                        left: 0,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    scrollCarousel('trending', 1);
+                }
+            }
         }
 
-        function stopAutoScroll() {
-            clearInterval(autoScrollInterval);
+        // Enhanced search functionality with debouncing
+        class SearchHandler {
+            constructor() {
+                this.searchInput = document.getElementById('movieSearch');
+                this.genreFilter = document.getElementById('genreFilter');
+                this.yearFilter = document.getElementById('yearFilter');
+                this.debounceTimer = null;
+                this.init();
+            }
+
+            init() {
+                if (this.searchInput) {
+                    this.searchInput.addEventListener('input', (e) => this.handleSearch(e));
+                }
+
+                if (this.genreFilter) {
+                    this.genreFilter.addEventListener('change', (e) => this.handleFilter(e));
+                }
+
+                if (this.yearFilter) {
+                    this.yearFilter.addEventListener('change', (e) => this.handleFilter(e));
+                }
+            }
+
+            handleSearch(e) {
+                clearTimeout(this.debounceTimer);
+                this.debounceTimer = setTimeout(() => {
+                    this.performSearch(e.target.value);
+                }, 300);
+            }
+
+            handleFilter(e) {
+                this.performFilter();
+            }
+
+            performSearch(query) {
+                console.log('Searching for:', query);
+                // Add your search logic here
+                // You can make AJAX calls to your Laravel backend
+            }
+
+            performFilter() {
+                const genre = this.genreFilter?.value || 'all';
+                const year = this.yearFilter?.value || 'all';
+                console.log('Filtering by:', {
+                    genre,
+                    year
+                });
+                // Add your filter logic here
+            }
         }
 
-        // Start auto-scroll when page loads
-        document.addEventListener('DOMContentLoaded', startAutoScroll);
+        // Intersection Observer for animations
+        class AnimationObserver {
+            constructor() {
+                this.observer = new IntersectionObserver(
+                    (entries) => this.handleIntersection(entries), {
+                        threshold: 0.1,
+                        rootMargin: '50px'
+                    }
+                );
+                this.init();
+            }
 
-        // Stop auto-scroll when user hovers over carousel
-        document.getElementById('trending-carousel').addEventListener('mouseenter', stopAutoScroll);
-        document.getElementById('trending-carousel').addEventListener('mouseleave', startAutoScroll);
+            init() {
+                const elements = document.querySelectorAll('.movie-card, .genre-card, .section-header');
+                elements.forEach(el => this.observer.observe(el));
+            }
 
-        // Search functionality
-        document.querySelector('input[type="text"]').addEventListener('input', function(e) {
-            // Implement search suggestions here
-            console.log('Searching for:', e.target.value);
+            handleIntersection(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in-up');
+                        this.observer.unobserve(entry.target);
+                    }
+                });
+            }
+        }
+
+        // Enhanced loading states
+        class LoadingManager {
+            static showLoading(element) {
+                element.classList.add('loading');
+            }
+
+            static hideLoading(element) {
+                element.classList.remove('loading');
+            }
+
+            static createSkeleton(container, count = 3) {
+                container.innerHTML = '';
+                for (let i = 0; i < count; i++) {
+                    const skeleton = document.createElement('div');
+                    skeleton.className = 'movie-card skeleton';
+                    skeleton.style.height = '200px';
+                    container.appendChild(skeleton);
+                }
+            }
+        }
+
+        // Touch/swipe support for mobile carousels
+        class TouchCarousel {
+            constructor(carouselId) {
+                this.carousel = document.getElementById(carouselId + '-carousel');
+                this.startX = 0;
+                this.scrollLeft = 0;
+                this.init();
+            }
+
+            init() {
+                if (!this.carousel) return;
+
+                this.carousel.addEventListener('touchstart', (e) => this.handleTouchStart(e));
+                this.carousel.addEventListener('touchmove', (e) => this.handleTouchMove(e));
+                this.carousel.addEventListener('touchend', (e) => this.handleTouchEnd(e));
+            }
+
+            handleTouchStart(e) {
+                this.startX = e.touches[0].pageX - this.carousel.offsetLeft;
+                this.scrollLeft = this.carousel.scrollLeft;
+            }
+
+            handleTouchMove(e) {
+                e.preventDefault();
+                const x = e.touches[0].pageX - this.carousel.offsetLeft;
+                const walk = (x - this.startX) * 2;
+                this.carousel.scrollLeft = this.scrollLeft - walk;
+            }
+
+            handleTouchEnd(e) {
+                // Add momentum scrolling or snap-to-item logic here if needed
+            }
+        }
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize auto-scroll carousel
+            new AutoScrollCarousel('trending', 5000);
+
+            // Initialize search functionality
+            new SearchHandler();
+
+            // Initialize animations
+            new AnimationObserver();
+
+            // Initialize touch support for carousels
+            new TouchCarousel('trending');
+            new TouchCarousel('top-rated');
+
+            // Add smooth scrolling to all internal links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Add loading states to buttons
+            document.querySelectorAll('.btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (!this.classList.contains('no-loading')) {
+                        LoadingManager.showLoading(this);
+                        setTimeout(() => LoadingManager.hideLoading(this), 2000);
+                    }
+                });
+            });
+
+            console.log('MovieRex Enhanced UI initialized successfully!');
         });
+
+        // Performance optimization: Lazy loading for images
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src || img.src;
+                        img.classList.remove('lazy');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
     </script>
 @endsection

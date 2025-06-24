@@ -44,7 +44,7 @@ class MovieController extends defaultController
         $isWatched = $this->is_movie_watched($id, $userId);
         $keywords = $this->set_keywords($id);
         $rex_similar_movies = $this->cb->rex_similar_movies(Auth::id(), $movie['id']);
-        dump($rex_similar_movies);
+        //dump($rex_similar_movies);
         return view('movie', [
             'movie' => $movie,
             'keywords' => $keywords,
@@ -120,9 +120,12 @@ class MovieController extends defaultController
         $userId = Auth::id();
         $keyword_req = $this->get_keyword($keyword);
         $keywordId = $keyword_req->id_keyword_tmdb;
-        $moviesResponse = $this->responseController->make_request(['link' => 'https://api.themoviedb.org/3/discover/movie'], [
-            'with_keywords' => $keywordId,
-        ]);
+        $moviesResponse = $this->responseController->make_request(
+            ['link' => 'https://api.themoviedb.org/3/discover/movie'],
+            [
+                'with_keywords' => $keywordId,
+            ]
+        );
         if ($moviesResponse->successful()) {
             $this->data->prepareMovies($moviesResponse->json()['results'] ?? []);
             $movies = $this->data->getMovies();
