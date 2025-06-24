@@ -7,6 +7,7 @@ use App\Http\Controllers\MovieController;
 
 // All routes will inherit the 'movierex' prefix from web.php
 Route::prefix('search')->group(function () {
+
     // Specific search routes must come before the generic search route
     Route::get('/genre/{genre}', [MovieSearchController::class, 'searchByGenre'])->name('search.genre');
     Route::get('/year/{year}', [MovieSearchController::class, 'searchByYear'])->name('search.year');
