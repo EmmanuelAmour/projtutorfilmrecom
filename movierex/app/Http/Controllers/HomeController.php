@@ -33,6 +33,7 @@ class HomeController extends defaultController
                 'popular_movies' => $this->userController->getPopularMovies(),
                 'keyword_movies' => $this->userController->getPopularMovies(),
                 'horror_movies' => $this->userController->getPopularMovies(),
+                'rex' => $this->userController->rex(),
                 'pageTitle' => 'Welcome to MovieRex',
                 'featured_movie' => $featuredMovie,
             ]);

@@ -9,7 +9,7 @@ class Keyword extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id_seo';
+    protected $primaryKey = 'id_keyword';
 
     protected $fillable = [
         'name',
@@ -20,7 +20,7 @@ class Keyword extends Model
     // Relationships
     public function likedByUsers()
     {
-        return $this->belongsToMany(User::class, 'like_keywords', 'id_seo', 'id_user')
+        return $this->belongsToMany(User::class, 'like_keywords', 'id_keyword', 'id_user')
             ->withTimestamps();
     }
 

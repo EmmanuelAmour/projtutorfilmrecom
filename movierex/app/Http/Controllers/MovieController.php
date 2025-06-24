@@ -48,6 +48,7 @@ class MovieController extends defaultController
             'keywords' => $keywords,
             'isLiked' => $isLiked,
             'isWatched' => $isWatched,
+            'rex_last_liked_movie_alone' => $this->cb->rex_last_liked_movie_alone(Auth::id()),
 
         ]);
     }

@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-
-
+use App\Http\Controllers\filter\CB;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 use App\Models\Genre;
@@ -14,7 +13,6 @@ use App\Models\LikeKeyword;
 use App\Models\LikeMovie;
 use App\Models\Movie;
 use App\Models\Watchlist;
-use Illuminate\Console\View\Components\Warn;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -26,6 +24,7 @@ class defaultController extends Controller
     protected $apiKey;
     protected $login;
     protected $adult;
+    protected $cb;
     protected $responseController;
     public function __construct()
     {
@@ -35,6 +34,7 @@ class defaultController extends Controller
         $this->set_session_login(Session::get('login', null));
         $this->set_session_adult();
         $this->responseController = new responseController($this->set_session_adult());
+        $this->cb = new CB(Auth::id());
     }
 
     //SESSION VARAIBLES 

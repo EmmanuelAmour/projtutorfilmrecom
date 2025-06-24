@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\filter;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\LikeKeyword;
 use App\Models\LikeGenre;
@@ -13,16 +14,68 @@ use App\Models\Watchlist;
 
 class Interests extends Controller
 {
+    public $liked_movies;     // Array of TMDb movie IDs
+    public $liked_genres;     // Array of TMDb genre IDs
+    public $liked_keywords;   // Array of TMDb keyword IDs
+    public $watched_movies;   // Array of TMDb movie IDs
 
-    protected $liked_movies;
-    protected $liked_genres;
-    protected $liked_keywords;
-    protected $watched_movies;
-    public function  __construct($id_user)
+    public function __construct($id_user)
     {
-        $this->liked_movies = LikeMovie::where('id_user', $id_user)->get();
-        $this->liked_genres = LikeGenre::where('id_user', $id_user)->get();
-        $this->liked_keywords = LikeKeyword::where('id_user', $id_user)->get();
-        $this->watched_movies = Watchlist::where('id_user', $id_user)->get();
+        $this->get_liked_movies($id_user);
+        $this->get_liked_genres($id_user);
+        $this->get_liked_keywords($id_user);
+        $this->get_watched_movies($id_user);
+    }
+
+    public function get_liked_movies($id_user)
+    {
+        $likedMovies = LikeMovie::where('id_user', $id_user)->get();
+
+        $this->liked_movies = [];
+        foreach ($likedMovies as $movie) {
+            $mo = Movie::find($movie->id_movie);
+            if ($mo) {
+                $this->liked_movies[] = $mo->id_movie_tmdb;
+            }
+        }
+    }
+
+    public function get_liked_genres($id_user)
+    {
+        $likedGenres = LikeGenre::where('id_user', $id_user)->get();
+
+        $this->liked_genres = [];
+        foreach ($likedGenres as $g) {
+            $genre = Genre::find($g->id_genre);
+            if ($genre) {
+                $this->liked_genres[] = $genre->id_genre_tmdb;
+            }
+        }
+    }
+
+    public function get_liked_keywords($id_user)
+    {
+        $likedKeywords = LikeKeyword::where('id_user', $id_user)->get();
+
+        $this->liked_keywords = [];
+        foreach ($likedKeywords as $k) {
+            $keyword = Keyword::find($k->id_keyword);
+            if ($keyword) {
+                $this->liked_keywords[] = $keyword->id_keyword_tmdb;
+            }
+        }
+    }
+
+    public function get_watched_movies($id_user)
+    {
+        $watchedMovies = Watchlist::where('id_user', $id_user)->get();
+
+        $this->watched_movies = [];
+        foreach ($watchedMovies as $wm) {
+            $movie = Movie::find($wm->id_movie);
+            if ($movie) {
+                $this->watched_movies[] = $movie->id_movie_tmdb;
+            }
+        }
     }
 }

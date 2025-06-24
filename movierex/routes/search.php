@@ -16,7 +16,7 @@ Route::prefix('search')->group(function () {
     Route::get('/country/{country}', [MovieSearchController::class, 'searchByCountry'])->name('search.country');
     Route::get('/keywords/{keyword}', [MovieSearchController::class, 'searchByKeyword'])->name('get.keywords');
     Route::get('/keyword/{keyword}', [MovieController::class, 'byKeyword'])->name('search.keyword');
-    Route::get('/actor/{name}', [MovieSearchController::class, 'searchActor'])->name('actor.search');
+    //Route::get('/actor/{name}', [MovieSearchController::class, 'searchActor'])->name('actor.search');
     // Fixed the controller method reference
     Route::get('/movie/{query}', [MovieSearchController::class, 'search'])->name('search');
 });
