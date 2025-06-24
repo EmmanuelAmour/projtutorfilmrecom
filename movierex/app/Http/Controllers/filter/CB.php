@@ -23,7 +23,7 @@ class CB extends Controller
     }
 
 
-    public function get_rex_by_genres_alone($id_user)
+    public function get_rex_by_genres_alone()
     {
         $genres_extracted = "";
         foreach ($this->interests->liked_genres as $genre) {
@@ -31,13 +31,15 @@ class CB extends Controller
         }
         $genres_extracted = substr($genres_extracted, 0, -1);
         //dd($this->interests);
-        return Http::get($this->tmdbBase . 'discover/movie', [
+        $results = Http::get($this->tmdbBase . 'discover/movie', [
             'api_key' => $this->apiKey,
             'with_genres' => $genres_extracted, // Western (37) AND Action (28)
             'sort_by' => 'popularity.desc',
             //'vote_average.gte' => 6,
             'vote_count.gte' => 50,
         ])->json()['results'] ?? [];
+        if (!$results)
+            return $this->rex_last_liked_genre_alone();
     }
 
 
@@ -93,5 +95,19 @@ class CB extends Controller
             'results' => $json,
             'id' => $id_movie_tmdb
         ];
+    }
+
+    public function rex_last_liked_genre_alone()
+    {
+        $genres_extracted = end($this->interests->liked_genres);
+        //dd($this->interests);
+        $results = Http::get($this->tmdbBase . 'discover/movie', [
+            'api_key' => $this->apiKey,
+            'with_genres' => $genres_extracted, // Western (37) AND Action (28)
+            'sort_by' => 'popularity.desc',
+            //'vote_average.gte' => 6,
+            'vote_count.gte' => 50,
+        ])->json()['results'] ?? [];
+        return $results;
     }
 }
