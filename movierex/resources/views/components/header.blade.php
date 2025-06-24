@@ -50,6 +50,12 @@
             <!-- Bouton de connexion -->
             <div class="flex items-center space-x-3">
                 @auth
+                    <button
+                        class="bg-yellow-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-400"
+                        onclick="showNotification()">
+                        Rex
+                    </button>
+
                     <!-- Si l'utilisateur est connecté -->
                     <div class="flex items-center space-x-3">
                         <span class="text-white text-sm">{{ Auth::user()->name }}</span>
@@ -77,6 +83,7 @@
             </div>
         </div>
     </div>
+
 </header>
 
 <script>

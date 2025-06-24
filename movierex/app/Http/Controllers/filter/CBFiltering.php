@@ -7,6 +7,17 @@ use Illuminate\Http\Request;
 class CBFiltering extends Controller
 {
 
+    protected $Interests;
 
-    public function get_recommedation($id_user) {}
+
+    public function __construct($id_user)
+    {
+        $this->Interests = new Interests($id_user);
+    }
+
+    public function get_recommedation($id_user)
+    {
+        $CBFiltering = [];
+        return ['CBFiltering' => $CBFiltering];
+    }
 }

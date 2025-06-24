@@ -32,6 +32,8 @@
 </head>
 
 <body style="background-color: rgb(17, 24, 39);">
+    <div class="notification-container" id="notificationContainer"></div>
+
     <!-- Logo vectoriel SVG -->
     <x-header />
     <main class="container mx-auto px-4 py-8 space-y-12">

@@ -33,6 +33,8 @@
 </head>
 
 <body class="bg-white-900 ">
+    <div class="notification-container" id="notificationContainer"></div>
+
     <!-- Logo vectoriel SVG -->
     <x-header />
     <main class="container mx-auto px-4 py-8 space-y-12">
@@ -56,6 +58,11 @@
         });
     </script>
     @yield('scripts')
+
+
+    <script defer src="//unpkg.com/alpinejs"></script>
+
+
 </body>
 
 </html>
