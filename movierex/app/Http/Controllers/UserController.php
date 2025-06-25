@@ -74,7 +74,7 @@ class UserController extends defaultController
         //dump($this->cb->rex_last_liked_movie_alone(Auth::id()));
 
         return [
-            'rex_genres_alone' => $this->cb->get_rex_by_genres_alone(Auth::id()),
+            'rex_genres_alone' => $this->cb->rex_by_genres_alone(Auth::id()),
             'rex_last_keyword_alone' => $this->cb->rex_last_keyword_alone(Auth::id()),
             'rex_last_liked_movie_alone' => $this->cb->rex_last_liked_movie_alone(Auth::id()),
         ];

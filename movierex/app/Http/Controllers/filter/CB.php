@@ -23,7 +23,7 @@ class CB extends Controller
     }
 
 
-    public function get_rex_by_genres_alone()
+    public function rex_by_genres_alone()
     {
         $genres_extracted = "";
         foreach ($this->interests->liked_genres as $genre) {
@@ -42,9 +42,7 @@ class CB extends Controller
             return $this->rex_last_liked_genre_alone();
     }
 
-
     //GET LAST OF LISTS
-
     public function rex_last_keyword_alone($id_user)
     {
         $lastkeyword = end($this->interests->liked_keywords);

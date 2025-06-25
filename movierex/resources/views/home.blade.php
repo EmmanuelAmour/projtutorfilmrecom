@@ -1,5 +1,4 @@
 @extends('layouts.default')
-@section('title', 'Accueil')
 @section('content')
     <!-- Enhanced Hero Section with Featured Movie -->
     <section class="hero-section">
@@ -103,58 +102,75 @@
         </div>
     </section>
 
-    <!-- Because You Liked Section -->
-    <section class="recommendations-section">
-        <div class="section-header">
-            <div class="section-title-wrapper">
-                <h2 class="section-title">
-                    Because you liked:
-                    <a href="{{ route('movie.show', ['id' => $rex['rex_last_liked_movie_alone']['id']]) }}"
-                        class="highlight-link">
-                        {{ $rex['rex_last_liked_movie_alone']['name'] }}
-                    </a>
-                </h2>
-                <p class="section-subtitle">Personalized recommendations based on your preferences</p>
-            </div>
-            <button class="btn btn-view-all">View All</button>
-        </div>
+    @auth
 
-        <div class="movie-grid">
-            @foreach (array_slice($rex['rex_last_liked_movie_alone']['results'], 0, 3) as $movie)
-                <div class="movie-card horizontal-card">
-                    <div class="movie-poster">
-                        <img src="https://image.tmdb.org/t/p/w500/{{ $movie['poster_path'] }}" alt="{{ $movie['title'] }}"
-                            loading="lazy">
+        @if ($rex['rex_last_liked_movie_alone']['results'] != null)
+            <!-- Because You Liked Section -->
+            <section class="recommendations-section">
+                <div class="section-header">
+                    <div class="section-title-wrapper">
+                        <h2 class="section-title">
+                            Because you liked:
+                            <a href="{{ route('movie.show', ['id' => $rex['rex_last_liked_movie_alone']['id']]) }}"
+                                class="highlight-link">
+                                {{ $rex['rex_last_liked_movie_alone']['name'] }}
+                            </a>
+                        </h2>
+                        <p class="section-subtitle">Personalized recommendations based on your preferences</p>
                     </div>
-                    <div class="movie-info">
-                        <div class="movie-badges">
-                            <span class="badge badge-new">New</span>
-                            <span class="badge badge-date">{{ date('d M', strtotime($movie['release_date'])) }}</span>
-                        </div>
+                    <button class="btn btn-view-all">View All</button>
+                </div>
 
-                        <h3 class="movie-title-card">{{ $movie['title'] }}</h3>
-                        <p class="movie-overview">{{ Str::limit($movie['overview'], 120) }}</p>
-
-                        <div class="movie-footer">
-                            <div class="movie-rating">
-                                <i class="fas fa-star"></i>
-                                <span>{{ number_format($movie['vote_average'], 1) }}</span>
-                                <span class="year">{{ date('Y', strtotime($movie['release_date'])) }}</span>
+                <div class="movie-grid">
+                    @foreach (array_slice($rex['rex_last_liked_movie_alone']['results'], 0, 3) as $movie)
+                        <div class="movie-card horizontal-card">
+                            <div class="movie-poster">
+                                <img src="https://image.tmdb.org/t/p/w500/{{ $movie['poster_path'] }}"
+                                    alt="{{ $movie['title'] }}" loading="lazy">
                             </div>
-                            <div class="movie-actions">
-                                <button class="btn-icon btn-primary">
-                                    <i class="fas fa-play"></i>
-                                </button>
-                                <button class="btn-icon btn-secondary">
-                                    <i class="fas fa-plus"></i>
-                                </button>
+                            <div class="movie-info">
+                                <div class="movie-badges">
+                                    <span class="badge badge-new">New</span>
+                                    <span class="badge badge-date">{{ date('d M', strtotime($movie['release_date'])) }}</span>
+                                </div>
+
+                                <h3 class="movie-title-card">{{ $movie['title'] }}</h3>
+                                <p class="movie-overview">{{ Str::limit($movie['overview'], 120) }}</p>
+
+                                <div class="movie-footer">
+                                    <div class="movie-rating">
+                                        <i class="fas fa-star"></i>
+                                        <span>{{ number_format($movie['vote_average'], 1) }}</span>
+                                        <span class="year">{{ date('Y', strtotime($movie['release_date'])) }}</span>
+                                    </div>
+                                    <div class="movie-actions">
+                                        <button class="btn-icon btn-primary">
+                                            <i class="fas fa-play"></i>
+                                        </button>
+                                        <button class="btn-icon btn-secondary">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    @endforeach
+                </div>
+            </section>
+        @else
+            <section class="recommendations-section">
+                <div class="section-header">
+                    <div class="section-title-wrapper">
+                        <h2 class="section-title">
+                            What are you waiting for, input your interests and start enjoying the best of the cinema!
+                        </h2>
+                        <p class="section-subtitle">Get Personalized recommendations based on your preferences</p>
                     </div>
                 </div>
-            @endforeach
-        </div>
-    </section>
+            </section>
+        @endif
+
+    @endauth
 
     <!-- Enhanced Trending Section -->
     <section class="trending-section">
@@ -228,118 +244,135 @@
             @endforeach
         </div>
     </section>
+    @auth
+        <!-- Enhanced Personalized Recommendations -->
+        @if (isset($rex['rex_genres_alone']))
+            <section class="personalized-section">
+                <div class="personalized-container">
+                    <div class="section-header">
+                        <div class="section-title-wrapper">
+                            <h2 class="section-title">
+                                <i class="fas fa-bullseye section-icon"></i>
+                                Recommended for You
+                            </h2>
+                            <p class="section-subtitle">Curated based on your viewing history and preferences</p>
+                        </div>
+                        <button class="btn btn-view-all">View All</button>
+                    </div>
 
-    <!-- Enhanced Personalized Recommendations -->
-    <section class="personalized-section">
-        <div class="personalized-container">
+                    <div class="recommendation-grid">
+                        @foreach (array_slice($rex['rex_genres_alone'], 0, 6) as $movie)
+                            <div class="recommendation-item">
+                                <div class="recommendation-poster">
+                                    <img src="https://image.tmdb.org/t/p/w500/{{ $movie['poster_path'] }}"
+                                        alt="{{ $movie['title'] }}" loading="lazy">
+                                    <div class="recommendation-overlay">
+                                        <div class="recommendation-info">
+                                            <h4 class="recommendation-title">{{ $movie['title'] }}</h4>
+                                            <div class="recommendation-rating">
+                                                <i class="fas fa-star"></i>
+                                                <span>{{ number_format($movie['vote_average'], 1) }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </section>
+            <!-- Enhanced Genre Categories -->
+            <section class="genres-section">
+                <h2 class="section-title centered">Explore by Genre</h2>
+
+                <div class="genres-grid">
+                    @php
+                        $genreColors = [
+                            'Action' => 'from-red-600 to-red-800',
+                            'Comedy' => 'from-yellow-500 to-orange-600',
+                            'Drama' => 'from-blue-600 to-purple-700',
+                            'Horror' => 'from-gray-800 to-black',
+                            'Romance' => 'from-pink-500 to-rose-600',
+                            'Sci-Fi' => 'from-cyan-500 to-blue-600',
+                        ];
+                    @endphp
+                    @foreach ($genres as $genre)
+                        <a href="{{ route('search.genre', ['genre' => $genre->name]) }}" class="genre-card"
+                            style="background: linear-gradient(135deg, {{ $genreColors[$genre->name] ?? 'var(--gradient-default)' }})">
+                            <div class="genre-content">
+                                <h3 class="genre-name">{{ $genre->name }}</h3>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            </section>
+        @endif
+
+        <!-- Keyword-based Recommendations -->
+        <section class="recommendations-section">
             <div class="section-header">
                 <div class="section-title-wrapper">
                     <h2 class="section-title">
-                        <i class="fas fa-bullseye section-icon"></i>
-                        Recommended for You
+                        Because you're interested in:
+                        <span class="highlight-text">{{ $rex['rex_last_keyword_alone']['name'] }}</span>
                     </h2>
-                    <p class="section-subtitle">Curated based on your viewing history and preferences</p>
+                    <p class="section-subtitle">Movies matching your interests</p>
                 </div>
                 <button class="btn btn-view-all">View All</button>
             </div>
 
-            <div class="recommendation-grid">
-                @foreach (array_slice($rex['rex_genres_alone'], 0, 6) as $movie)
-                    <div class="recommendation-item">
-                        <div class="recommendation-poster">
+            <div class="movie-grid">
+                @foreach (array_slice($rex['rex_last_keyword_alone']['results'], 0, 3) as $movie)
+                    <div class="movie-card horizontal-card">
+                        <div class="movie-poster">
                             <img src="https://image.tmdb.org/t/p/w500/{{ $movie['poster_path'] }}"
                                 alt="{{ $movie['title'] }}" loading="lazy">
-                            <div class="recommendation-overlay">
-                                <div class="recommendation-info">
-                                    <h4 class="recommendation-title">{{ $movie['title'] }}</h4>
-                                    <div class="recommendation-rating">
-                                        <i class="fas fa-star"></i>
-                                        <span>{{ number_format($movie['vote_average'], 1) }}</span>
-                                    </div>
+                        </div>
+                        <div class="movie-info">
+                            <div class="movie-badges">
+                                <span class="badge badge-new">New</span>
+                                <span class="badge badge-date">{{ date('d M', strtotime($movie['release_date'])) }}</span>
+                            </div>
+
+                            <h3 class="movie-title-card">{{ $movie['title'] }}</h3>
+                            <p class="movie-overview">{{ Str::limit($movie['overview'], 120) }}</p>
+
+                            <div class="movie-footer">
+                                <div class="movie-rating">
+                                    <i class="fas fa-star"></i>
+                                    <span>{{ number_format($movie['vote_average'], 1) }}</span>
+                                    <span class="year">{{ date('Y', strtotime($movie['release_date'])) }}</span>
+                                </div>
+                                <div class="movie-actions">
+                                    <button class="btn-icon btn-primary">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                    <button class="btn-icon btn-secondary">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 @endforeach
             </div>
-        </div>
-    </section>
-
-    <!-- Enhanced Genre Categories -->
-    <section class="genres-section">
-        <h2 class="section-title centered">Explore by Genre</h2>
-
-        <div class="genres-grid">
-            @php
-                $genreColors = [
-                    'Action' => 'from-red-600 to-red-800',
-                    'Comedy' => 'from-yellow-500 to-orange-600',
-                    'Drama' => 'from-blue-600 to-purple-700',
-                    'Horror' => 'from-gray-800 to-black',
-                    'Romance' => 'from-pink-500 to-rose-600',
-                    'Sci-Fi' => 'from-cyan-500 to-blue-600',
-                ];
-            @endphp
-            @foreach ($genres as $genre)
-                <a href="{{ route('search.genre', ['genre' => $genre->name]) }}" class="genre-card"
-                    style="background: linear-gradient(135deg, {{ $genreColors[$genre->name] ?? 'var(--gradient-default)' }})">
-                    <div class="genre-content">
-                        <h3 class="genre-name">{{ $genre->name }}</h3>
+        </section>
+    @else
+        <section class="personalized-section">
+            <div class="personalized-container">
+                <div class="section-header">
+                    <div class="section-title-wrapper">
+                        <h2 class="section-title">
+                            <i class="fas fa-bullseye section-icon"></i>
+                            Sign in to your account to recieve our full services.
+                        </h2>
+                        <p class="section-subtitle">and if you don't have an account, sign up</p>
                     </div>
-                </a>
-            @endforeach
-        </div>
-    </section>
-
-    <!-- Keyword-based Recommendations -->
-    <section class="recommendations-section">
-        <div class="section-header">
-            <div class="section-title-wrapper">
-                <h2 class="section-title">
-                    Because you're interested in:
-                    <span class="highlight-text">{{ $rex['rex_last_keyword_alone']['name'] }}</span>
-                </h2>
-                <p class="section-subtitle">Movies matching your interests</p>
-            </div>
-            <button class="btn btn-view-all">View All</button>
-        </div>
-
-        <div class="movie-grid">
-            @foreach (array_slice($rex['rex_last_keyword_alone']['results'], 0, 3) as $movie)
-                <div class="movie-card horizontal-card">
-                    <div class="movie-poster">
-                        <img src="https://image.tmdb.org/t/p/w500/{{ $movie['poster_path'] }}"
-                            alt="{{ $movie['title'] }}" loading="lazy">
-                    </div>
-                    <div class="movie-info">
-                        <div class="movie-badges">
-                            <span class="badge badge-new">New</span>
-                            <span class="badge badge-date">{{ date('d M', strtotime($movie['release_date'])) }}</span>
-                        </div>
-
-                        <h3 class="movie-title-card">{{ $movie['title'] }}</h3>
-                        <p class="movie-overview">{{ Str::limit($movie['overview'], 120) }}</p>
-
-                        <div class="movie-footer">
-                            <div class="movie-rating">
-                                <i class="fas fa-star"></i>
-                                <span>{{ number_format($movie['vote_average'], 1) }}</span>
-                                <span class="year">{{ date('Y', strtotime($movie['release_date'])) }}</span>
-                            </div>
-                            <div class="movie-actions">
-                                <button class="btn-icon btn-primary">
-                                    <i class="fas fa-play"></i>
-                                </button>
-                                <button class="btn-icon btn-secondary">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    <a href="/login" class="btn btn-view-all">Login</a>
                 </div>
-            @endforeach
-        </div>
-    </section>
+            </div>
+        </section>
+    @endauth
 
     <!-- Enhanced Top Rated Movies -->
     <section class="top-rated-section">

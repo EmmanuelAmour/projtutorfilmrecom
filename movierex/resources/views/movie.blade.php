@@ -128,8 +128,9 @@
                                 </div>
                                 <div class="p-2 bg-gray-800 rounded-lg">{{ $movie['runtime'] }} min</div>
                                 @foreach ($movie['genres'] as $genre)
-                                    <a href="{{ route('search.genre', ['genre' => $genre['name']]) }}"
-                                        class="p-2 bg-blue-800 rounded-lg hover:bg-blue-700 text-blue-100">
+                                    <a class="p-2 bg-blue-800 rounded-lg hover:bg-blue-700 text-blue-100"
+                                        @auth href="{{ route('search.genre', ['genre' => $genre['name']]) }}"
+                                        @else href="#" @endauth>
                                         {{ $genre['name'] }}
                                     </a>
                                 @endforeach
@@ -209,7 +210,10 @@
                         <h4 class="text-white text-lg font-semibold">Keywords</h4>
                         <div class="flex flex-wrap mt-2 gap-2 ">
                             @foreach ($keywords as $keyword)
-                                <a href="{{ route('search.keyword', ['keyword' => $keyword['name']]) }}">
+                                <a
+                                    @auth href="{{ route('search.keyword', ['keyword' => $keyword['name']]) }}"
+                                    @else
+                                    href="#" @endauth>
                                     <div class="px-2 py-1 bg-gray-800 text-sm rounded">
                                         <span class="text-sm font-medium text-white">{{ $keyword['name'] }}</span>
                                     </div>
