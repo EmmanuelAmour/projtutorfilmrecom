@@ -14,6 +14,7 @@ use App\Models\Watchlist;
 
 class Interests extends Controller
 {
+    public $id_user;
     public $liked_movies;     // Array of TMDb movie IDs
     public $liked_genres;     // Array of TMDb genre IDs
     public $liked_keywords;   // Array of TMDb keyword IDs
@@ -21,8 +22,9 @@ class Interests extends Controller
 
     public function __construct($id_user)
     {
+        $this->id_user = $id_user;
         $this->get_liked_movies($id_user);
-        $this->get_liked_genres($id_user);
+        $this->get_liked_genres();
         $this->get_liked_keywords($id_user);
         $this->get_watched_movies($id_user);
     }
@@ -40,9 +42,9 @@ class Interests extends Controller
         }
     }
 
-    public function get_liked_genres($id_user)
+    public function get_liked_genres()
     {
-        $likedGenres = LikeGenre::where('id_user', $id_user)->get();
+        $likedGenres = LikeGenre::where('id_user', $this->id_user)->get();
 
         $this->liked_genres = [];
         foreach ($likedGenres as $g) {
@@ -51,6 +53,7 @@ class Interests extends Controller
                 $this->liked_genres[] = $genre->id_genre_tmdb;
             }
         }
+        return $this->liked_genres; // Return the array her
     }
 
     public function get_liked_keywords($id_user)

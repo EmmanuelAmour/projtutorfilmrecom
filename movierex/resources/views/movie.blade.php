@@ -124,8 +124,12 @@
                         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
                             <div class="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap text-gray-300">
-                                <div class="p-2 bg-gray-800 rounded-lg">{{ date('Y', strtotime($movie['release_date'])) }}
-                                </div>
+                                <a
+                                    href="{{ route('search.year', ['year' => date('Y', strtotime($movie['release_date']))]) }}">
+                                    <div class="p-2 bg-gray-800 rounded-lg">
+                                        {{ date('Y', strtotime($movie['release_date'])) }}
+                                    </div>
+                                </a>
                                 <div class="p-2 bg-gray-800 rounded-lg">{{ $movie['runtime'] }} min</div>
                                 @foreach ($movie['genres'] as $genre)
                                     <a class="p-2 bg-blue-800 rounded-lg hover:bg-blue-700 text-blue-100"

@@ -282,32 +282,31 @@
                 </div>
             </section>
             <!-- Enhanced Genre Categories -->
-            <section class="genres-section">
-                <h2 class="section-title centered">Explore by Genre</h2>
-
-                <div class="genres-grid">
-                    @php
-                        $genreColors = [
-                            'Action' => 'from-red-600 to-red-800',
-                            'Comedy' => 'from-yellow-500 to-orange-600',
-                            'Drama' => 'from-blue-600 to-purple-700',
-                            'Horror' => 'from-gray-800 to-black',
-                            'Romance' => 'from-pink-500 to-rose-600',
-                            'Sci-Fi' => 'from-cyan-500 to-blue-600',
-                        ];
-                    @endphp
-                    @foreach ($genres as $genre)
-                        <a href="{{ route('search.genre', ['genre' => $genre->name]) }}" class="genre-card"
-                            style="background: linear-gradient(135deg, {{ $genreColors[$genre->name] ?? 'var(--gradient-default)' }})">
-                            <div class="genre-content">
-                                <h3 class="genre-name">{{ $genre->name }}</h3>
-                            </div>
-                        </a>
-                    @endforeach
-                </div>
-            </section>
         @endif
+        <section class="genres-section">
+            <h2 class="section-title centered">Explore by Genre</h2>
 
+            <div class="genres-grid">
+                @php
+                    $genreColors = [
+                        'Action' => 'from-red-600 to-red-800',
+                        'Comedy' => 'from-yellow-500 to-orange-600',
+                        'Drama' => 'from-blue-600 to-purple-700',
+                        'Horror' => 'from-gray-800 to-black',
+                        'Romance' => 'from-pink-500 to-rose-600',
+                        'Sci-Fi' => 'from-cyan-500 to-blue-600',
+                    ];
+                @endphp
+                @foreach ($genres as $genre)
+                    <a href="{{ route('search.genre', ['genre' => $genre->name]) }}" class="genre-card"
+                        style="background: linear-gradient(135deg, {{ $genreColors[$genre->name] ?? 'var(--gradient-default)' }})">
+                        <div class="genre-content">
+                            <h3 class="genre-name">{{ $genre->name }}</h3>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </section>
         <!-- Keyword-based Recommendations -->
         <section class="recommendations-section">
             <div class="section-header">
@@ -392,37 +391,39 @@
         </div>
 
         <div id="top-rated-carousel" class="movie-carousel compact">
-            @foreach ($popular_movies as $movie)
-                <div class="carousel-item compact">
-                    <div class="movie-card compact-card">
-                        <div class="movie-poster-wrapper compact">
-                            <img src="https://image.tmdb.org/t/p/w500/{{ $movie['poster_path'] }}"
-                                alt="{{ $movie['title'] }}" class="movie-poster-compact" loading="lazy">
+            @foreach ($top_rated as $movie)
+                <a href="{{ route('movie.show', ['id' => $movie['id']]) }}">
+                    <div class="carousel-item compact">
+                        <div class="movie-card compact-card">
+                            <div class="movie-poster-wrapper compact">
+                                <img src="https://image.tmdb.org/t/p/w500/{{ $movie['poster_path'] }}"
+                                    alt="{{ $movie['title'] }}" class="movie-poster-compact" loading="lazy">
 
-                            <div class="rating-badge-top">
-                                ⭐ {{ number_format($movie['vote_average'], 1) }}
-                            </div>
+                                <div class="rating-badge-top">
+                                    ⭐ {{ number_format($movie['vote_average'], 1) }}
+                                </div>
 
-                            <div class="movie-overlay compact">
-                                <div class="overlay-content compact">
-                                    <h3 class="movie-title-overlay">{{ $movie['title'] }}</h3>
-                                    <div class="movie-actions-compact">
-                                        <span
-                                            class="movie-year-overlay">{{ date('Y', strtotime($movie['release_date'])) }}</span>
-                                        <div class="actions-buttons">
-                                            <button class="btn-icon btn-primary small">
-                                                <i class="fas fa-play"></i>
-                                            </button>
-                                            <button class="btn-icon btn-secondary small">
-                                                <i class="fas fa-heart"></i>
-                                            </button>
+                                <div class="movie-overlay compact">
+                                    <div class="overlay-content compact">
+                                        <h3 class="movie-title-overlay">{{ $movie['title'] }}</h3>
+                                        <div class="movie-actions-compact">
+                                            <span
+                                                class="movie-year-overlay">{{ date('Y', strtotime($movie['release_date'])) }}</span>
+                                            <div class="actions-buttons">
+                                                <button class="btn-icon btn-primary small">
+                                                    <i class="fas fa-play"></i>
+                                                </button>
+                                                <button class="btn-icon btn-secondary small">
+                                                    <i class="fas fa-heart"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
             @endforeach
         </div>
     </section>

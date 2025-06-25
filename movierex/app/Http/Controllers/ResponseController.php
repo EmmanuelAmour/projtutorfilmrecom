@@ -42,7 +42,7 @@ class ResponseController extends Controller
         $baseParams = [
             'api_key' => $this->apiKey,
             'include_adult' => $this->include_adult,
-            //'certification_country' => $this->certification_country,
+            'certification_country' => $this->certification_country,
             'certification' => $this->certification
         ];
         // Merge the base parameters with any additional query parameters

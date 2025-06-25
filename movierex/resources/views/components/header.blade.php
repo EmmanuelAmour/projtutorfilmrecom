@@ -66,13 +66,16 @@
                         </svg>
                         <span>Trending</span>
                     </a>
-                    <a href="/top-rated" class="nav-link" data-category="top-rated">
+
+
+                    <a href=" {{ route('rex.matches') }} " class="nav-link">
+
                         <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2">
                             <polygon
                                 points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                         </svg>
-                        <span>Top Rated</span>
+                        <span>Rex</span>
                     </a>
 
                 </div>
@@ -82,18 +85,19 @@
             <div class="user-section">
                 @auth
                     <!-- Rex Button with Notification Badge -->
-                    <button class="rex-button" id="rex-button" onclick="showNotification()"
-                        aria-label="Rex recommendations">
-                        <svg class="rex-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2">
-                            <path d="M9 12l2 2 4-4" />
-                            <path d="M21 12c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z" />
-                            <path d="M3 12c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z" />
-                        </svg>
-                        <span>Rex</span>
-                        <div class="notification-badge" id="rex-badge">3</div>
-                    </button>
-
+                    <!--
+                                    <button class="rex-button" id="rex-button" onclick="showNotification()"
+                                        aria-label="Rex recommendations">
+                                        <svg class="rex-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <path d="M9 12l2 2 4-4" />
+                                            <path d="M21 12c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z" />
+                                            <path d="M3 12c.552 0 1-.448 1-1s-.448-1-1-1-1 .448-1 1 .448 1 1 1z" />
+                                        </svg>
+                                        <span>Rex</span>
+                                        <div class="notification-badge" id="rex-badge">3</div>
+                                    </button>
+                                -->
                     <!-- User Profile Dropdown -->
                     <div class="user-profile-dropdown">
                         <button class="profile-trigger" id="profile-trigger" aria-label="User menu"

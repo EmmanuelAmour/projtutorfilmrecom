@@ -43,7 +43,7 @@ Route::group(['prefix' => ''], function () {
     include __DIR__ . '/search.php';
     include __DIR__ . '/user.php';
     include __DIR__ . '/prepare.php';
-    include __DIR__ . '/recs.php';
+    include __DIR__ . '/rex.php';
 
 
     //Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');

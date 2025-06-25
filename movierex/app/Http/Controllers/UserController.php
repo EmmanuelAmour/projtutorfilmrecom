@@ -66,6 +66,16 @@ class UserController extends defaultController
         ])->json()['results'] ?? [];
     }
 
+    public function getTopRatedMovies()
+    {
+        return Http::get($this->tmdbBase . 'movie/top_rated', [
+            'api_key' => $this->apiKey,
+            //'region' => 'FR',
+            //'language' => 'fr-FR',
+            'page' => 1
+        ])->json()['results'] ?? [];
+    }
+
 
 
     public function rex()
